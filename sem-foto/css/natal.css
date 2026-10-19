@@ -143,6 +143,10 @@ body.natal-theme {
 .natal-theme .conteudo-curso h3 { color: var(--fc-paper); font-size: 22px; }
 .natal-theme .descricao-curso, .natal-theme .titulo-instrutores span, .natal-theme .quantidade-instrutores { color: #b5c4b6; }
 .natal-theme .informacoes-curso, .natal-theme .info-item { border-color: var(--fc-line); }
+/* A grade acompanha a largura do card, inclusive em painéis estreitos. */
+.natal-theme .informacoes-curso { grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.5rem), 1fr)); }
+.natal-theme .info-item > div { flex: 1; min-width: 0; }
+.natal-theme .info-item :is(small, strong) { white-space: normal; overflow-wrap: anywhere; }
 .natal-theme .info-item small { color: #a8bba9; }
 .natal-theme .info-item strong { color: var(--fc-paper); }
 .natal-theme .icone-info { color: var(--fc-gold); background: #e6c88c0d; }

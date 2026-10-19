@@ -341,6 +341,10 @@ export async function carregarCursos(
         textoInstrutores = `${quantidadeInstrutores} instrutores`;
       }
 
+      // Sala ausente deve ter um rótulo legível no cartão.
+      const sala = String(curso.sala ?? "").trim();
+      const salaExibida = /^(?:null|undefined)?$/i.test(sala) ? "A definir" : sala;
+
       // =========================
       // CARD
       // =========================
@@ -391,7 +395,7 @@ export async function carregarCursos(
                 <small>SALA</small>
 
                 <strong>
-                  ${curso.sala}
+                  ${salaExibida}
                 </strong>
               </div>
             </div>
