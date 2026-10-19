@@ -1,0 +1,210 @@
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Cadastro | FlashClip</title>
+
+    <link rel="stylesheet" href="../css/cadastro.css" />
+      <meta name="theme-color" content="#071f1b">
+    <link rel="stylesheet" href="../css/natal.css">
+  </head>
+
+  <body class="natal-theme" data-lights="on">
+    <a class="fc-skip" href="#conteudo">Pular para o conteúdo</a>
+    <header class="navbar navbar-cadastro">
+      <a href="../index.html" class="logo">
+        <img src="../imagens/logoFlash.png" alt="FlashClip" />
+      </a>
+
+      <a href="../index.html" class="voltar voltar-evento">
+        <span class="voltar-seta" aria-hidden="true">←</span>
+        <span>Voltar ao evento</span>
+      </a>
+    </header>
+
+    <main class="cadastro-container" id="conteudo">
+      <section class="cadastro-card">
+        <div class="cadastro-cabecalho">
+          <span class="categoria">FLASHCLIP</span>
+
+          <h1>Crie sua conta</h1>
+
+          <p>Faça seu cadastro para participar do evento.</p>
+        </div>
+
+        <form id="formCadastro" class="formulario">
+          <div class="campo">
+            <label for="nome">Nome completo</label>
+
+            <input
+              type="text"
+              id="nome"
+              placeholder="Digite seu nome completo"
+              minlength="5"
+              required
+            />
+          </div>
+
+          <div class="campos-duplos">
+            <div class="campo">
+              <label for="telefone">Telefone</label>
+
+              <input
+                type="tel"
+                id="telefone"
+                placeholder="63 992548143"
+                inputmode="numeric"
+                maxlength="12"
+                required
+              />
+            </div>
+
+            <div class="campo">
+              <label for="idade">Idade</label>
+
+              <input
+                type="number"
+                id="idade"
+                placeholder="Sua idade"
+                min="1"
+                max="100"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="origem">Origem</label>
+
+            <select id="origem" required>
+              <option value="" disabled selected>
+                Selecione sua origem
+              </option>
+
+              <option value="ulbra-ti">ULBRA - TI</option>
+              <option value="ulbra-outro">ULBRA - Outro curso</option>
+              <option value="outra-faculdade">Outra faculdade</option>
+              <option value="externo">Externo</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="email">E-mail</label>
+
+            <input
+              type="email"
+              id="email"
+              placeholder="seu@email.com"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label for="senha">Senha</label>
+
+            <div class="senha-input-container">
+              <input
+                type="password"
+                id="senha"
+                placeholder="Mínimo de 8 caracteres"
+                minlength="8"
+                autocomplete="new-password"
+                required
+              />
+
+              <button
+                type="button"
+                id="alternarVisibilidadeSenha"
+                class="botao-mostrar-senha"
+                aria-label="Mostrar senha"
+                aria-controls="senha"
+                aria-pressed="false"
+              >
+                <svg
+                  class="icone-senha"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2.06 12s3.44-7 9.94-7 9.94 7 9.94 7-3.44 7-9.94 7-9.94-7-9.94-7Z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+
+            <div
+              class="senha-seguranca"
+              id="containerForcaSenha"
+              data-nivel="vazia"
+            >
+              <div
+                class="senha-barra"
+                id="medidorSenha"
+                role="progressbar"
+                aria-label="Força da senha"
+                aria-valuemin="0"
+                aria-valuemax="6"
+                aria-valuenow="0"
+                aria-valuetext="Digite uma senha"
+              >
+                <span
+                  class="senha-barra-progresso"
+                  id="barraSenha"
+                ></span>
+              </div>
+
+              <div class="senha-status">
+                <span id="textoForcaSenha">Digite uma senha</span>
+                <span id="contadorSenha">0 caracteres</span>
+              </div>
+
+              <small class="senha-dica">
+                Use 8 ou mais caracteres e combine letras, números e símbolos.
+              </small>
+            </div>
+          </div>
+
+          <button type="submit" class="botao-cadastro">
+            Criar conta
+          </button>
+        </form>
+
+        <div class="login">
+          <span>Já possui uma conta?</span>
+          <a href="../html/login.html">Entrar</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-cadastro">
+      <div class="footer-frase">
+        <span class="footer-ornamento" aria-hidden="true">✦</span>
+        <p>Transformando momentos em histórias.</p>
+        <span class="footer-ornamento" aria-hidden="true">✦</span>
+      </div>
+
+      <div class="footer-base">
+        <span>© 2026/2 FlashClip. Todos os direitos reservados.</span>
+
+        <span class="footer-natal">
+          <span aria-hidden="true">✧</span>
+          Edição especial de Natal
+        </span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../js/cadastro.js"></script>
+      <script defer src="../js/natal.js"></script>
+  </body>
+</html>
