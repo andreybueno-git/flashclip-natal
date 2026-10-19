@@ -2,6 +2,11 @@
 (() => {
   let context, musicBus, musicOutput, effectsBus, master, timer=0, unlocked=false;
   let music=true, effects=true, step=0, nextNote=0, revision=0, effectsRevision=0;
+  // Durante a visita, o site lembra se o som já foi ativado e como ficaram música e efeitos.
+  const memory={get(key){try{return sessionStorage.getItem('flashclip-'+key+'-v1');}catch{return null;}},set(key,value){try{sessionStorage.setItem('flashclip-'+key+'-v1',value);}catch{}}};
+  if(memory.get('musica')==='0')music=false;
+  if(memory.get('efeitos')==='0')effects=false;
+  const returning=memory.get('som')==='1';
   let lifecycle=Promise.resolve(), pageInactive=false, startedSilent=false, pressStarted=false, pressTarget=null, buttonUnlockTried=false, pendingEffect=null;
   const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const voices=new Set();
@@ -12,6 +17,7 @@
   const melody=[74,null,78,81,null,78,76,null,74,78,81,86,null,81,78,null,79,null,83,86,null,83,81,null,79,78,76,74,null,76,78,null,78,null,81,83,null,81,78,null,76,78,81,78,null,74,73,null,76,null,81,85,null,81,78,null,76,73,69,73,76,null,null,null];
   const chords=[[50,57,62,66],[43,55,59,62],[47,54,59,62],[45,57,61,64]];
   const hz=midi=>440*Math.pow(2,(midi-69)/12);
+  function remember(){memory.set('musica',music?'1':'0');memory.set('efeitos',effects?'1':'0');}
   function label(){
     for(const b of musicButtons){b.setAttribute('aria-pressed',String(music));b.textContent=music?'♫ Música ligada':'♫ Música desligada';}
     for(const b of effectsButtons){b.setAttribute('aria-pressed',String(effects));b.textContent=effects?'♪ Efeitos ligados':'♪ Efeitos desligados';}
@@ -36,7 +42,7 @@
     context.onstatechange=()=>{
       document.body.dataset.audio=context.state;
       if(context.state!=='running'||!unlocked)return;
-      buttonUnlockTried=false;flushEffect();reconcile();
+      buttonUnlockTried=false;memory.set('som','1');flushEffect();reconcile();
     };
   }
   // Com a chave de silencioso do iPhone, o Web Audio fica mudo; 'playback' segue o volume de mídia.
@@ -140,7 +146,7 @@
     if(!activating(event)||audible())return;
     // Antes do primeiro som, só o globo e os controles de áudio ligam a trilha. Depois disso,
     // qualquer toque retoma o que o iOS suspendeu (aba em segundo plano, ligação, Siri).
-    if(!unlocked&&!event.target.closest?.('#globo,[data-entry-tap],[data-explore-globe],[data-replay-entry],[data-audio-music],[data-audio-effects]'))return;
+    if(!unlocked&&!returning&&!event.target.closest?.('#globo,[data-entry-tap],[data-explore-globe],[data-replay-entry],[data-audio-music],[data-audio-effects]'))return;
     // Repete a cada gesto até o som sair: um toque recusado não encerra as tentativas.
     wake();
   }
@@ -155,8 +161,8 @@
     return true;
   }
   // Religar acontece dentro do clique, ainda no gesto, para o Safari aceitar o resume.
-  musicButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(music)){reconcile();return;}music=!music;label();if(music)wake();else reconcile();}));
-  effectsButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(effects)){reconcile();return;}effects=!effects;if(!effects)stopVoices(effectsBus);label();if(effects)wake();else reconcile();}));
+  musicButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(music)){reconcile();return;}music=!music;remember();label();if(music)wake();else reconcile();}));
+  effectsButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(effects)){reconcile();return;}effects=!effects;remember();if(!effects)stopVoices(effectsBus);label();if(effects)wake();else reconcile();}));
   function noise(duration,frequency,volume){
     if(!context)return;
     const buffer=context.createBuffer(1,Math.ceil(context.sampleRate*duration),context.sampleRate),data=buffer.getChannelData(0);
@@ -201,4 +207,7 @@
   window.addEventListener('pagehide',()=>{pageInactive=true;reconcile();});
   window.addEventListener('pageshow',()=>{pageInactive=false;if(unlocked)reconcile();});
   label();
+  // Ao voltar para a home, tenta retomar a trilha sem esperar toque (Chrome e Android permitem
+  // depois de uma navegação feita pelo visitante); no iPhone, o primeiro toque em qualquer lugar retoma.
+  if(returning&&(music||effects)){init();if(context){unlocked=true;reconcile();}}
 })();

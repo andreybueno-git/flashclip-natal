@@ -24,6 +24,10 @@
   --fc-screen-text: #f2f2f2;
 }
 html { scroll-behavior: smooth; scroll-padding-top: 105px; }
+/* Troca de página direta: o navegador mantém a página atual até a próxima estar pronta,
+   sem tela preta no meio e sem animação de transição. */
+@view-transition { navigation: auto; }
+::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
 body.natal-theme {
   background: var(--fc-ink) !important;
   color: var(--fc-paper);
