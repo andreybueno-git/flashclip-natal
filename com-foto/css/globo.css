@@ -118,6 +118,7 @@ body.fc-globe-open { overflow: hidden; }
 
 /* O canvas acompanha o mouse sem uma moldura retangular ao receber foco. */
 .natal-theme .fc-globe-view:focus { outline: none; }
+.natal-theme #fc-title:focus { outline: none; }
 .fc-globe-experience:has(.fc-globe-view:focus-visible) .fc-globe-hint { color: #f3eedf; text-decoration: underline; text-underline-offset: 4px; }
 
 /* Controles confortáveis para os dedos, inclusive em paisagem. */
