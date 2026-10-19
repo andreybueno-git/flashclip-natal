@@ -209,6 +209,15 @@ body.natal-theme {
     radial-gradient(ellipse at 12% 18%, #124b3333, transparent 34%),
     radial-gradient(ellipse at 87% 45%, #f5bd3d12, transparent 30%);
 }
+/* No celular, o céu que o Pedro desenhou para telas estreitas. */
+@media (max-width: 700px) {
+  .natal-theme main.fc-home::before {
+    background-image:
+      url("../imagens/Decoracoes/ceu-estrelado-natal-mobile.svg"),
+      radial-gradient(ellipse at 12% 18%, #124b3333, transparent 34%),
+      radial-gradient(ellipse at 87% 45%, #f5bd3d12, transparent 30%);
+  }
+}
 .natal-theme .fc-home :is(.sobre, .parceiros, .motivos, .cursos) { border-top: 1px solid var(--fc-line); }
 .natal-theme .fc-home .sobre { background-image: radial-gradient(ellipse at 17% 52%, #124b3330, transparent 36%) !important; }
 .natal-theme .fc-home .parceiros { background-image: radial-gradient(ellipse at 80% 45%, #f5bd3d14, transparent 32%) !important; }
@@ -219,6 +228,7 @@ body.natal-theme {
 @media (min-width: 1121px) {
   .natal-theme .fc-home .sobre-conteudo { padding-left: clamp(0px, 9vw, 150px); }
   .natal-theme .fc-home .parceiros-titulo { padding-left: clamp(0px, 15vw, 230px); }
+  .natal-theme .fc-home .parceiros::before { left: max(22px, calc(9% + min(15vw, 230px) - clamp(170px, 19vw, 245px) - 32px)); }
 }
 .natal-theme .fc-home .motivos::before { left: auto; }
 /* Rótulos e títulos alinhados à esquerda: traço dourado só à direita. */
@@ -226,6 +236,8 @@ body.natal-theme {
 .natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos) > span::before { display: none; }
 .natal-theme .fc-home :is(.sobre h2, .parceiros-titulo h2, .titulo-motivos h2, .titulo-cursos h2)::after { margin-left: 0; background: linear-gradient(90deg, var(--fc-gold), #f5bd3d26); box-shadow: 0 0 18px #f5bd3d26; }
 .natal-theme .fc-home .titulo-cursos::before { content: none; }
+.natal-theme .fc-home .titulo-cursos > span { gap: 12px; font-weight: 700; }
+.natal-theme .fc-home .titulo-cursos > span::after { content: ""; display: block; width: 22px; height: 1px; flex: 0 0 22px; background: linear-gradient(90deg, rgba(245, 189, 61, .78), transparent); }
 .natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos, .titulo-cursos) > p { color: var(--fc-muted); }
 .fc-motion-ready .fc-reveal { opacity: 0; translate: 0 18px; transition: opacity .65s, translate .65s; }
 .fc-motion-ready .fc-reveal.fc-visible { opacity: 1; translate: 0 0; }

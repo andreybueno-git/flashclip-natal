@@ -191,6 +191,15 @@ body.natal-theme {
     radial-gradient(ellipse at 12% 18%, #2d604233, transparent 34%),
     radial-gradient(ellipse at 87% 45%, #e6c88c12, transparent 30%);
 }
+/* No celular, o céu que o Pedro desenhou para telas estreitas. */
+@media (max-width: 700px) {
+  .natal-theme main.fc-home::before {
+    background-image:
+      url("../imagens/Decoracoes/ceu-estrelado-natal-mobile.svg"),
+      radial-gradient(ellipse at 12% 18%, #2d604233, transparent 34%),
+      radial-gradient(ellipse at 87% 45%, #e6c88c12, transparent 30%);
+  }
+}
 .natal-theme .fc-home .motivos { background-image: radial-gradient(ellipse at 12% 55%, #2d604226, transparent 30%), radial-gradient(ellipse at 88% 18%, #e6c88c0d, transparent 28%) !important; }
 .natal-theme .fc-home .cursos { background-image: radial-gradient(ellipse at 50% 5%, #e6c88c12, transparent 40%) !important; }
 .natal-theme .fc-home :is(.sobre, .parceiros)::before { opacity: .85; }
@@ -199,13 +208,17 @@ body.natal-theme {
 @media (min-width: 1121px) {
   .natal-theme .fc-home .sobre-conteudo { padding-left: clamp(0px, 9vw, 150px); }
   .natal-theme .fc-home .parceiros-titulo { padding-left: clamp(0px, 15vw, 230px); }
+  .natal-theme .fc-home .parceiros::before { left: max(22px, calc(9% + min(15vw, 230px) - clamp(170px, 19vw, 245px) - 32px)); }
 }
 .natal-theme .fc-home .motivos::before { left: auto; }
 /* Rótulos e títulos alinhados à esquerda: traço dourado só à direita. */
 .natal-theme .fc-home .sobre-categoria, .natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos, .titulo-cursos) > span { display: inline-flex; justify-content: flex-start; }
 .natal-theme .fc-home .sobre-categoria::before, .natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos) > span::before { display: none; }
 .natal-theme .fc-home :is(.sobre h2, .parceiros-titulo h2, .titulo-motivos h2, .titulo-cursos h2)::after { margin-left: 0; background: linear-gradient(90deg, var(--fc-gold), #e6c88c26); box-shadow: none; }
+.natal-theme .fc-home .fc-hero { background-color: var(--fc-ink); }
 .natal-theme .fc-home .titulo-cursos::before { content: none; }
+.natal-theme .fc-home .titulo-cursos > span { gap: 12px; font-weight: 700; }
+.natal-theme .fc-home .titulo-cursos > span::after { content: ""; display: block; width: 22px; height: 1px; flex: 0 0 22px; background: linear-gradient(90deg, rgba(245, 189, 61, .78), transparent); }
 .natal-theme .fc-home .parceiros-titulo { margin-bottom: 0; }
 .fc-motion-ready .fc-reveal { opacity: 0; translate: 0 18px; transition: opacity .65s, translate .65s; }
 .fc-motion-ready .fc-reveal.fc-visible { opacity: 1; translate: 0 0; }
