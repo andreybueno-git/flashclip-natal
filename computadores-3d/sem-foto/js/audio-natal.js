@@ -1,27 +1,34 @@
 /* Trilha e efeitos originais, sintetizados localmente. Sem áudio ou serviços externos. */
 (() => {
+  // Dentro da moldura (app.html) a música toca na moldura, que não recarrega ao trocar de tela.
+  // A página só entrega a ela seus botões, gestos e eventos.
+  try{if(window.parent!==window&&window.parent.FCAudio){window.parent.FCAudio.attach(window);return;}}catch{}
+  // As escolhas do visitante valem para todas as telas; a sessão lembra se o som já foi liberado.
+  const PREFS='fc-audio-prefs', SESSION='fc-audio-session';
+  function read(storage,key){try{return JSON.parse(window[storage].getItem(key))||{};}catch{return {};}}
+  function write(storage,key,value){try{window[storage].setItem(key,JSON.stringify(value));}catch{}}
+  const prefs=read('localStorage',PREFS), session=read('sessionStorage',SESSION);
+  // A trilha segue o relógio da sessão: ao trocar de tela ela continua do ponto em que estaria.
+  if(!session.epoch){session.epoch=Date.now()/1000;write('sessionStorage',SESSION,session);}
+  // Só a home tem o globo; nela o primeiro som continua esperando o toque no globo.
+  let gated=false, view=window;
   let context, musicBus, musicOutput, effectsBus, master, timer=0, unlocked=false;
-  let music=true, effects=true, step=0, nextNote=0, revision=0, effectsRevision=0;
-  // Durante a visita, o site lembra se o som já foi ativado e como ficaram música e efeitos.
-  const memory={get(key){try{return sessionStorage.getItem('flashclip-'+key+'-v1');}catch{return null;}},set(key,value){try{sessionStorage.setItem('flashclip-'+key+'-v1',value);}catch{}}};
-  if(memory.get('musica')==='0')music=false;
-  if(memory.get('efeitos')==='0')effects=false;
-  const returning=memory.get('som')==='1';
+  let music=prefs.music!==false, effects=prefs.effects!==false, step=0, nextNote=0, revision=0, effectsRevision=0;
   let lifecycle=Promise.resolve(), pageInactive=false, startedSilent=false, pressStarted=false, pressTarget=null, buttonUnlockTried=false, pendingEffect=null;
   const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const voices=new Set();
-  const musicButtons=[...document.querySelectorAll('[data-audio-music]')];
-  const effectsButtons=[...document.querySelectorAll('[data-audio-effects]')];
+  let musicButtons=[], effectsButtons=[];
   const beat=60/104, subdivision=beat/2;
   // Melodia original de oito compassos: sinos sobre D, G, Bm e A.
   const melody=[74,null,78,81,null,78,76,null,74,78,81,86,null,81,78,null,79,null,83,86,null,83,81,null,79,78,76,74,null,76,78,null,78,null,81,83,null,81,78,null,76,78,81,78,null,74,73,null,76,null,81,85,null,81,78,null,76,73,69,73,76,null,null,null];
   const chords=[[50,57,62,66],[43,55,59,62],[47,54,59,62],[45,57,61,64]];
   const hz=midi=>440*Math.pow(2,(midi-69)/12);
-  function remember(){memory.set('musica',music?'1':'0');memory.set('efeitos',effects?'1':'0');}
   function label(){
     for(const b of musicButtons){b.setAttribute('aria-pressed',String(music));b.textContent=music?'♫ Música ligada':'♫ Música desligada';}
     for(const b of effectsButtons){b.setAttribute('aria-pressed',String(effects));b.textContent=effects?'♪ Efeitos ligados':'♪ Efeitos desligados';}
   }
+  // O estado vai para o body da tela visível (e da moldura) para o CSS reagir.
+  function setState(){for(const w of new Set([window,view]))if(w.document.body)w.document.body.dataset.audio=context.state;}
   function init(){
     if(context)return;
     const Audio=window.AudioContext||window.webkitAudioContext;
@@ -40,9 +47,10 @@
     const wet=context.createGain();wet.gain.value=.14;lowpass.connect(wet);wet.connect(musicOutput);
     // Um resume tardio (gesto seguinte, volta de interrupção no iOS) também retoma a trilha.
     context.onstatechange=()=>{
-      document.body.dataset.audio=context.state;
+      setState();
       if(context.state!=='running'||!unlocked)return;
-      buttonUnlockTried=false;memory.set('som','1');flushEffect();reconcile();
+      if(!session.unlocked){session.unlocked=true;write('sessionStorage',SESSION,session);}
+      buttonUnlockTried=false;flushEffect();reconcile();
     };
   }
   // Com a chave de silencioso do iPhone, o Web Audio fica mudo; 'playback' segue o volume de mídia.
@@ -88,13 +96,15 @@
     if(!context||!music||!wantsRunning()||context.state!=='running')return;
     // Se a thread ficou bloqueada, não despeje todas as notas perdidas de uma vez.
     if(nextNote<context.currentTime-subdivision)nextNote=context.currentTime+.03;
-    while(nextNote<context.currentTime+.3){
+    // Agenda um segundo à frente: a moldura divide a mesma linha de execução com a tela, e o
+    // globo 3D começando a desenhar não pode deixar a música com buracos.
+    while(nextNote<context.currentTime+1){
       const index=step%melody.length,note=melody[index];
       if(note!==null)bell(note,nextNote,step%4===0?.24:.17);
       if(step%16===0)for(const midi of chords[Math.floor(index/16)])tone(hz(midi),nextNote,beat*5,.09,musicBus,'triangle');
       nextNote+=subdivision;step++;
     }
-    document.body.dataset.audio=context.state;
+    setState();
   }
   function reconcile(){
     const current=++revision;
@@ -120,11 +130,12 @@
       }
       if(current!==revision)return;
       if(wantsRunning()&&music&&context.state==='running'&&!timer){
-        nextNote=context.currentTime+.06;timer=setInterval(schedule,100);schedule();
+        nextNote=context.currentTime+.06;step=Math.ceil((Date.now()/1000+.06-session.epoch)/subdivision);
+        timer=setInterval(schedule,100);schedule();
       }
-      document.body.dataset.audio=context.state;
+      setState();
     }).catch(error=>{
-      if(current===revision){stopMusic();document.body.dataset.audio=context.state;}
+      if(current===revision){stopMusic();setState();}
       console.warn('Não foi possível atualizar a reprodução de áudio.',error);
     });
     return lifecycle;
@@ -146,11 +157,11 @@
     if(!activating(event)||audible())return;
     // Antes do primeiro som, só o globo e os controles de áudio ligam a trilha. Depois disso,
     // qualquer toque retoma o que o iOS suspendeu (aba em segundo plano, ligação, Siri).
-    if(!unlocked&&!returning&&!event.target.closest?.('#globo,[data-entry-tap],[data-explore-globe],[data-replay-entry],[data-audio-music],[data-audio-effects]'))return;
+    // Nas outras telas, qualquer toque inicia a trilha.
+    if(!unlocked&&gated&&!event.target.closest?.('#globo,[data-entry-tap],[data-explore-globe],[data-replay-entry],[data-audio-music],[data-audio-effects]'))return;
     // Repete a cada gesto até o som sair: um toque recusado não encerra as tentativas.
     wake();
   }
-  for(const type of ['pointerdown','pointerup','touchend','click','keydown'])document.addEventListener(type,gesture,{capture:true,passive:true});
   // Com o som ainda parado, o primeiro toque em "ligada" só libera o áudio, sem desligar a opção.
   // Se mesmo assim o som não sair, o toque seguinte volta a alternar normalmente.
   function onlyUnlock(enabled){
@@ -161,8 +172,9 @@
     return true;
   }
   // Religar acontece dentro do clique, ainda no gesto, para o Safari aceitar o resume.
-  musicButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(music)){reconcile();return;}music=!music;remember();label();if(music)wake();else reconcile();}));
-  effectsButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(effects)){reconcile();return;}effects=!effects;remember();if(!effects)stopVoices(effectsBus);label();if(effects)wake();else reconcile();}));
+  function savePrefs(){write('localStorage',PREFS,{music,effects});}
+  function toggleMusic(){if(onlyUnlock(music)){reconcile();return;}music=!music;savePrefs();label();if(music)wake();else reconcile();}
+  function toggleEffects(){if(onlyUnlock(effects)){reconcile();return;}effects=!effects;savePrefs();if(!effects)stopVoices(effectsBus);label();if(effects)wake();else reconcile();}
   function noise(duration,frequency,volume){
     if(!context)return;
     const buffer=context.createBuffer(1,Math.ceil(context.sampleRate*duration),context.sampleRate),data=buffer.getChannelData(0);
@@ -188,26 +200,40 @@
     pendingEffect={play,at:performance.now(),revision:effectsRevision};
     reconcile().then(flushEffect);
   }
-  window.addEventListener('fc:entry-hit',e=>{
-    playEffect(()=>{
-      const count=e.detail.count,now=context.currentTime;
-      if(count<5){noise(.1,2000+count*550,.38);bell(86+count*2,now,.18,effectsBus);}
-      else {noise(.55,3100,.45);[91,95,98,103,107].forEach((n,i)=>bell(n,now+i*.035,.19,effectsBus));}
-    });
-  });
-  window.addEventListener('fc:sleigh-fly',()=>{
-    playEffect(()=>{
-      const now=context.currentTime;noise(.9,800,.22);
-      [86,90,93,98,93,90,86,93].forEach((n,i)=>bell(n,now+i*.16,.18,effectsBus));
-    });
-  });
-  window.addEventListener('fc:shake',()=>playEffect(()=>{noise(.4,1900,.18);bell(93,context.currentTime,.12,effectsBus);}));
-  window.addEventListener('fc:entry-complete',()=>playEffect(()=>{const now=context.currentTime;[74,78,81].forEach(n=>bell(n,now,.13,effectsBus));}));
   document.addEventListener('visibilitychange',reconcile);
   window.addEventListener('pagehide',()=>{pageInactive=true;reconcile();});
   window.addEventListener('pageshow',()=>{pageInactive=false;if(unlocked)reconcile();});
-  label();
-  // Ao voltar para a home, tenta retomar a trilha sem esperar toque (Chrome e Android permitem
-  // depois de uma navegação feita pelo visitante); no iPhone, o primeiro toque em qualquer lugar retoma.
-  if(returning&&(music||effects)){init();if(context){unlocked=true;reconcile();}}
+  // Liga uma tela (a própria página, ou a página dentro da moldura) ao motor de áudio.
+  function attach(win){
+    const doc=win.document;view=win;
+    gated=!!doc.getElementById('globo');
+    musicButtons=[...doc.querySelectorAll('[data-audio-music]')];
+    effectsButtons=[...doc.querySelectorAll('[data-audio-effects]')];
+    musicButtons.forEach(button=>button.addEventListener('click',toggleMusic));
+    effectsButtons.forEach(button=>button.addEventListener('click',toggleEffects));
+    for(const type of ['pointerdown','pointerup','touchend','click','keydown'])doc.addEventListener(type,gesture,{capture:true,passive:true});
+    win.addEventListener('fc:entry-hit',e=>{
+      playEffect(()=>{
+        const count=e.detail.count,now=context.currentTime;
+        if(count<5){noise(.1,2000+count*550,.38);bell(86+count*2,now,.18,effectsBus);}
+        else {noise(.55,3100,.45);[91,95,98,103,107].forEach((n,i)=>bell(n,now+i*.035,.19,effectsBus));}
+      });
+    });
+    win.addEventListener('fc:sleigh-fly',()=>{
+      playEffect(()=>{
+        const now=context.currentTime;noise(.9,800,.22);
+        [86,90,93,98,93,90,86,93].forEach((n,i)=>bell(n,now+i*.16,.18,effectsBus));
+      });
+    });
+    win.addEventListener('fc:shake',()=>playEffect(()=>{noise(.4,1900,.18);bell(93,context.currentTime,.12,effectsBus);}));
+    win.addEventListener('fc:entry-complete',()=>playEffect(()=>{const now=context.currentTime;[74,78,81].forEach(n=>bell(n,now,.13,effectsBus));}));
+    // Toque nos botões magnéticos (Entrar, Inscrições, Criar conta...): um brilho curto de sino.
+    win.addEventListener('fc:ui-press',()=>playEffect(()=>{const now=context.currentTime;noise(.12,5200,.12);bell(93,now,.11,effectsBus);bell(98,now+.06,.09,effectsBus);}));
+    label();if(context)setState();
+  }
+  window.FCAudio={attach};
+  attach(window);
+  // Som já liberado nesta sessão: a nova tela retoma sozinha quando o navegador permite
+  // (Chrome, depois de um clique no mesmo site); senão, o primeiro toque em qualquer lugar.
+  if(session.unlocked&&wantsRunning()){init();if(context){unlocked=true;reconcile();}}
 })();

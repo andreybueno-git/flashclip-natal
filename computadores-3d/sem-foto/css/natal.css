@@ -1,4 +1,4 @@
-/* FlashClip · camada natalina sobre o design do Pedro (preto, ardósia e dourado). */
+/* FlashClip · camada natalina da home sobre o design do Pedro (preto, ardósia e dourado). */
 :root {
   --fc-ink: #030508;
   --fc-pine: #11161b;
@@ -7,27 +7,8 @@
   --fc-red: #d7192f;
   --fc-muted: #a5abb0;
   --fc-line: rgba(245, 189, 61, .16);
-  /* Notebooks 3D dos cursos (arquivos compartilhados em ../shared). */
-  --fc-computer-base: #090d12;
-  --fc-computer-top: #161d25;
-  --fc-computer-glow: #2a333f75;
-  --fc-computer-accent: #f5bd3d;
-  --fc-computer-muted: #aeb4b8;
-  --fc-computer-frame: #222830;
-  --fc-computer-screen: #080d11;
-  --fc-computer-text: #f2f2f2;
-  --fc-computer-hint: #c9cdd1;
-  --fc-screen-glow: #1c2530;
-  --fc-screen-base: #05080b;
-  --fc-screen-muted: #a5abb0;
-  --fc-screen-rule: #f5bd3d35;
-  --fc-screen-text: #f2f2f2;
 }
 html { scroll-behavior: smooth; scroll-padding-top: 105px; }
-/* Troca de página direta: o navegador mantém a página atual até a próxima estar pronta,
-   sem tela preta no meio e sem animação de transição. */
-@view-transition { navigation: auto; }
-::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
 body.natal-theme {
   background: var(--fc-ink) !important;
   color: var(--fc-paper);
@@ -181,29 +162,6 @@ body.natal-theme {
 .natal-theme footer a:hover { color: var(--fc-gold); }
 .natal-theme footer::before, .natal-theme footer::after { display: none; }
 
-/* A mesma identidade nas páginas de conteúdo, conta e administração. */
-.natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) { position: relative; padding-top: 80px; padding-bottom: 55px; border-bottom: 1px solid var(--fc-line); background: radial-gradient(ellipse at 50% -40%, #124b3352, transparent 75%); }
-.natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) h1 { color: var(--fc-paper); background: none; -webkit-text-fill-color: currentColor; font: 400 clamp(44px, 5vw, 72px)/1.05 Georgia, serif; letter-spacing: -.045em; }
-.natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) > span { color: var(--fc-gold); font-size: 10px; letter-spacing: .16em; }
-.natal-theme :is(.evento-conteudo, .bloco-sobre, .faq-item, .card-patrocinador, .info-card, .card-instrutor, .login-card, .cadastro-card, .card-matricula, .card-inscricao, .painel, .cards .card) { background: #11161b; border: 1px solid var(--fc-line); border-radius: 8px; box-shadow: none; }
-.natal-theme :is(.login-card, .cadastro-card) { border-top: 2px solid var(--fc-gold); }
-.natal-theme :is(.login-card, .cadastro-card)::before, .natal-theme :is(.login-card, .cadastro-card)::after { display: none; }
-.natal-theme :is(.login-card, .cadastro-card, .card-matricula) h1 { font-family: Georgia, serif; font-weight: 400; letter-spacing: -.035em; color: var(--fc-paper); }
-.natal-theme .campo label { color: #d6d6d6; }
-.natal-theme .campo :is(input, select) { background: #0d1217; border-color: #a5abb04d; color: var(--fc-paper); border-radius: 4px; font-family: inherit; }
-.natal-theme .campo :is(input, select)::placeholder { color: #9da1a5; }
-.natal-theme .campo :is(input, select):focus { border-color: var(--fc-gold); outline: 2px solid #f5bd3d26; }
-.natal-theme :is(.botao-login, .botao-cadastro, .botao-confirmar) { background: var(--fc-gold); color: var(--fc-ink); border-radius: 4px; font-family: inherit; }
-.natal-theme :is(.botao-login, .botao-cadastro, .botao-confirmar):hover { background: #ffd45e; }
-.natal-theme .faq-item summary { color: var(--fc-paper); }
-.natal-theme .faq-item[open] { border-color: #f5bd3d88; }
-.natal-theme .faq-item .numero, .natal-theme .faq-item .icone { color: var(--fc-gold); }
-.natal-theme .filtro.ativo { background: var(--fc-gold); color: var(--fc-ink); border-color: var(--fc-gold); }
-.natal-theme .filtro { border-color: var(--fc-line); }
-.natal-theme .cta { background: #11161b; border: 1px solid var(--fc-line); border-radius: 8px; }
-.natal-theme .cta h2 { font-family: Georgia, serif; color: var(--fc-paper); }
-.natal-theme .cta > span { color: var(--fc-gold); }
-.natal-theme .cabecalho { background: #11161b; border-color: var(--fc-line); }
 /* Home atualizada pelo Pedro: céu estrelado, ilustrações natalinas
    e a paleta escura dele, com o 3D e as animações por cima. */
 .natal-theme main.fc-home { background-color: var(--fc-ink); }
@@ -301,9 +259,6 @@ body.natal-theme {
   .natal-theme .card-motivo h3 { font-size: 14px; }
   .natal-theme .cursos { padding: 60px 7%; }
   .fc-closing { flex-direction: column; align-items: flex-start; padding: 50px 7%; }
-  .natal-theme :is(.login-container, .cadastro-container) { padding: 30px 5%; }
-  .natal-theme :is(.login-card, .cadastro-card) { padding: 30px 22px; }
-  .natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) { padding-top: 55px; padding-bottom: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
