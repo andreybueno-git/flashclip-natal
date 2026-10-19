@@ -3,11 +3,20 @@
   const body = document.body;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const stage = document.querySelector('.fc-ornament-stage');
+  const scene = stage?.querySelector('.fc-scene');
+  const hero = scene?.closest('.fc-hero');
+  const navbar = document.querySelector('.navbar');
   const lightButton = document.querySelector('[data-toggle-lights]');
   const motionButton = document.querySelector('[data-toggle-motion]');
   let paused = false;
   let scrollFrame = 0;
   let pointerFrame = 0;
+  let scrollExtent = 0;
+  let heroTop = 0;
+  let heroHeight = 0;
+  let heroVisible = !('IntersectionObserver' in window);
+  let lastProgress = '';
+  let lastDrift = '';
 
   lightButton?.addEventListener('click', () => {
     const on = body.dataset.lights !== 'on';
@@ -49,20 +58,50 @@
   });
 
   function updateScroll() {
-    const total = document.documentElement.scrollHeight - window.innerHeight;
-    body.style.setProperty('--fc-progress', total > 0 ? String(window.scrollY / total) : '0');
-    const hero = document.querySelector('.fc-hero');
-    if (hero && !paused && !reduced.matches) {
-      const rect = hero.getBoundingClientRect();
-      hero.style.setProperty('--fc-drift', String(Math.max(0, Math.min(1, -rect.top / rect.height))));
-    }
     scrollFrame = 0;
+    const position = window.scrollY;
+    const progress = (scrollExtent > 0 ? Math.max(0, Math.min(1, position / scrollExtent)) : 0).toFixed(4);
+    if (navbar && progress !== lastProgress) {
+      navbar.style.setProperty('--fc-progress', progress);
+      lastProgress = progress;
+    }
+    // The WebGL globe handles its own pose. Only the original SVG ornament
+    // needs this drift, and its geometry is measured when the layout changes.
+    if (scene && heroVisible && heroHeight && !paused && !reduced.matches) {
+      const drift = Math.max(0, Math.min(1, (position - heroTop) / heroHeight)).toFixed(4);
+      if (drift !== lastDrift) {
+        scene.style.setProperty('--fc-drift', drift);
+        lastDrift = drift;
+      }
+    }
   }
-  window.addEventListener('scroll', () => {
+  function scheduleScroll() {
     if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll);
-  }, {passive: true});
-  window.addEventListener('resize', updateScroll, {passive: true});
-  updateScroll();
+  }
+  function measureScroll() {
+    scrollExtent = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    if (hero) {
+      const rect = hero.getBoundingClientRect();
+      heroTop = rect.top + window.scrollY;
+      heroHeight = rect.height;
+    }
+    scheduleScroll();
+  }
+  window.addEventListener('scroll', scheduleScroll, {passive: true});
+  window.addEventListener('resize', measureScroll, {passive: true});
+  if ('ResizeObserver' in window) {
+    const layoutObserver = new ResizeObserver(measureScroll);
+    layoutObserver.observe(body);
+  }
+  if (hero && 'IntersectionObserver' in window) {
+    const heroObserver = new IntersectionObserver(entries => {
+      heroVisible = entries[0].isIntersecting;
+      if (heroVisible) scheduleScroll();
+    });
+    heroObserver.observe(hero);
+  }
+  window.addEventListener('load', measureScroll, {once: true});
+  measureScroll();
 
   const revealElements = document.querySelectorAll('.fc-home .sobre-conteudo, .fc-home .card-motivo, .fc-home .titulo-cursos, .fc-closing > div');
   if ('IntersectionObserver' in window && !reduced.matches) {

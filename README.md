@@ -1,11 +1,11 @@
 # FlashClip · três propostas de Natal
 
-Três propostas da página inicial do FlashClip, com o mesmo globo 3D interativo, abertura com Papai Noel e controles separados de música e efeitos.
+Três propostas da página inicial do FlashClip, com o mesmo globo 3D interativo, abertura com Papai Noel, notebooks 3D nos cursos e controles separados de música e efeitos.
 
 - [Comparar as versões](https://andreybueno-git.github.io/flashclip-natal/)
 - [Sem a foto](https://andreybueno-git.github.io/flashclip-natal/sem-foto/)
 - [Com a foto](https://andreybueno-git.github.io/flashclip-natal/com-foto/)
-- [Com notebooks 3D nos cursos](https://andreybueno-git.github.io/flashclip-natal/computadores-3d/sem-foto/)
+- [Na paleta escura do Pedro](https://andreybueno-git.github.io/flashclip-natal/computadores-3d/sem-foto/)
 
 O globo responde ao mouse, arrasto, toque e teclado. A abertura pode ser pulada; o som começa após uma interação do visitante.
 

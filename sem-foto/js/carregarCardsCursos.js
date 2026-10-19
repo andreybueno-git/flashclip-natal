@@ -4,6 +4,7 @@
 
 import { clienteSupabase } from "./supabase.js";
 import { carregarDadosCursos, carregarDadosVagas } from "./dados.js";
+import { computerMarkup } from "../../computadores-3d/shared/course-identities.js?v=ready-1";
 
 // =========================
 // CONFIGURAÇÕES
@@ -277,9 +278,7 @@ export async function carregarCursos(
       // IMAGEM DO CURSO
       // =========================
 
-      const imagemCurso =
-        montarImagem(curso.imagem, caminhoImagens) ||
-        `${caminhoImagens}curso-padrao.png`;
+      const notebook = computerMarkup(curso.nome);
 
       // =========================
       // MINISTRANTES
@@ -300,7 +299,7 @@ export async function carregarCursos(
       ministrantesVisiveis.forEach(function (ministrante) {
         const imagemInstrutor =
           montarImagem(ministrante.referenciaFoto, caminhoImagens) ||
-          IMAGEM_INSTRUTOR_PADRAO;
+          `${caminhoImagens}usuario-padrao.png`;
 
         avataresInstrutores += `
             <div class="instrutor-avatar">
@@ -352,11 +351,7 @@ export async function carregarCursos(
       card.innerHTML = `
         <div class="cabecalho-curso">
 
-          <img
-            src="${imagemCurso}"
-            alt="${curso.nome}"
-            class="imagem-curso"
-          >
+          ${notebook}
 
           <span class="status-curso">
             ${curso.status}

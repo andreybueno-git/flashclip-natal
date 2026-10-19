@@ -20,6 +20,7 @@ function fallback(error) {
 async function initGlobe() {
   const root = document.querySelector('.fc-globe-experience');
   const dock = document.querySelector('.fc-globe-dock');
+  const hero = document.querySelector('.fc-hero');
   const dialog = document.querySelector('.fc-globe-dialog');
   const closeButton = root.querySelector('[data-close-globe]');
   const expandButton = root.querySelector('[data-explore-globe]');
@@ -36,6 +37,9 @@ async function initGlobe() {
   renderer.toneMappingExposure = .86;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // Falling flakes do not cast shadows; reuse the map until the model moves.
+  renderer.shadowMap.autoUpdate = false;
+  renderer.shadowMap.needsUpdate = true;
   renderer.domElement.setAttribute('aria-hidden', 'true');
   view.querySelector('.fc-globe-canvas').appendChild(renderer.domElement);
   const envScene = new RoomEnvironment();
@@ -112,7 +116,9 @@ async function initGlobe() {
   let frame=0, previous=0, visible=true, disposed=false, paused=document.body.classList.contains('fc-paused');
   let targetYaw=-.16, targetPitch=0, yaw=targetYaw, pitch=0, kick=0, kickTime=0, activity=0;
   let drag=null, currentLight=true, accumulator=0, lastSnowReport='';
-  let scrollDepth=0, dolly=8.4;
+  let scrollDepth=0, dolly=8.4, scrolling=false, scrollTimer=0;
+  let heroTop=0, heroHeight=1, sizeDirty=true;
+  let shadowYaw=NaN, shadowPitch=NaN, shadowRoll=NaN, shadowX=NaN;
   const homeYaw=-.16;
   const opening=new GlobeOpening({scene,world,pivot,glass,view,onChange:schedule,onComplete:()=>window.dispatchEvent(new CustomEvent('fc:entry-complete'))});
   function startEntry(){opening.start();targetYaw=0;targetPitch=0;yaw=0;pitch=0;kick=0;schedule();}
@@ -133,12 +139,19 @@ async function initGlobe() {
     view.dataset.snow=String(snow.active); view.dataset.motion=paused?'paused':reduced.matches?'reduced':'active';
   }
   function schedule() {
-    if(frame||disposed||document.hidden||!visible) return;
+    if(frame||disposed||document.hidden||!visible||scrolling) return;
     frame=requestAnimationFrame(render);
   }
   let lastWidth=0,lastHeight=0;
-  function resize() { schedule(); }
+  function resize() { sizeDirty=true; schedule(); }
+  function measureHero() {
+    if (!hero) return;
+    const rect=hero.getBoundingClientRect();
+    heroTop=rect.top+window.scrollY;heroHeight=Math.max(1,rect.height);
+  }
   function syncRendererSize() {
+    if(!sizeDirty)return;
+    sizeDirty=false;
     const {width,height}=view.getBoundingClientRect();
     if(!width||!height||(width===lastWidth&&height===lastHeight)) return;
     lastWidth=width;lastHeight=height;
@@ -175,7 +188,7 @@ async function initGlobe() {
   }
   function render(now,initial=false) {
     frame=0;
-    if(disposed||(!initial&&(document.hidden||!visible))) {previous=0;return;}
+    if(disposed||(!initial&&(document.hidden||!visible||scrolling))) {previous=0;return;}
     syncRendererSize();
     const dt=previous?Math.min((now-previous)/1000,.05):1/60; previous=now;
     let needsMore=false;
@@ -201,6 +214,11 @@ async function initGlobe() {
     const fitWidth=4.35/(2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*camera.aspect);
     const distance=Math.max(dolly,fitWidth);
     camera.position.set(0,3.05+scrollDepth*.3,distance); camera.lookAt(0,1.9,0);
+    const rotation=pivot.rotation;
+    if(opening.playing||rotation.x!==shadowPitch||rotation.y!==shadowYaw||rotation.z!==shadowRoll||pivot.position.x!==shadowX) {
+      renderer.shadowMap.needsUpdate=true;
+      shadowPitch=rotation.x;shadowYaw=rotation.y;shadowRoll=rotation.z;shadowX=pivot.position.x;
+    }
     renderer.render(scene,camera); syncData();
     if(needsMore) schedule(); else previous=0;
   }
@@ -213,7 +231,19 @@ async function initGlobe() {
   });mo.observe(document.body,{attributes:true,attributeFilter:['class','data-lights']});
   reduced.addEventListener('change',()=>{kick=0;yaw=targetYaw;pitch=targetPitch;previous=0;if(reduced.matches&&opening.playing)opening.complete();report(reduced.matches?'Movimento reduzido: use as setas para explorar em passos.':'Arraste para girar ou chacoalhe para fazer nevar.');schedule();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(frame);frame=0;drag=null;}else{previous=0;schedule();}});
-  window.addEventListener('scroll',()=>{if(!dialog.open&&!reduced.matches&&!paused){const rect=document.querySelector('.fc-hero').getBoundingClientRect();scrollDepth=Math.max(0,Math.min(1,-rect.top/rect.height));schedule();}},{passive:true});
+  // Keep the current frame while the page moves; resume physics after rest.
+  const heroResize=new ResizeObserver(measureHero);if(hero)heroResize.observe(hero);
+  window.addEventListener('resize',measureHero,{passive:true});measureHero();
+  window.addEventListener('scroll',()=>{
+    if(dialog.open||opening.active||opening.playing||document.body.classList.contains('fc-entry-landing'))return;
+    if(!scrolling){scrolling=true;cancelAnimationFrame(frame);frame=0;previous=0;}
+    clearTimeout(scrollTimer);
+    scrollTimer=setTimeout(()=>{
+      scrolling=false;
+      if(!reduced.matches&&!paused)scrollDepth=Math.max(0,Math.min(1,(window.scrollY-heroTop)/heroHeight));
+      schedule();
+    },140);
+  },{passive:true});
 
   const shakeGesture = new ShakeGesture();
   const hoverGesture = new ShakeGesture({distance:35});

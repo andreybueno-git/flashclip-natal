@@ -51,7 +51,7 @@ setInterval(atualizarContador, 1000);
 // CURSOS
 // =========================
 
-import { carregarCursos } from "./carregarCardsCursos.js?v=cards-1";
+import { carregarCursos } from "./carregarCardsCursos.js?v=ready-1";
 
 const listaCursos = document.getElementById("listaCursos");
 
