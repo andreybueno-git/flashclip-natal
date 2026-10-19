@@ -55,4 +55,6 @@ import { carregarCursos } from "./carregarCardsCursos.js";
 
 const listaCursos = document.getElementById("listaCursos");
 
-carregarCursos(listaCursos, 11, "./html/matricula.html", "./html/login.html", "./imagens/");
+carregarCursos(listaCursos, 11, "./html/matricula.html", "./html/login.html", "./imagens/")
+  .then(()=>window.FlashClipBoot?.report('courses'))
+  .catch(()=>window.FlashClipBoot?.fail('courses'));

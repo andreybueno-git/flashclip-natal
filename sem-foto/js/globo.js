@@ -6,7 +6,7 @@ import { ShakeGesture } from './shake-gesture.js';
 import { GlobeOpening } from './abertura-3d.js';
 
 const view = document.querySelector('.fc-globe-view');
-if (view) initGlobe().catch(fallback);
+if (view&&!window.FlashClipBoot?.bypassed) initGlobe().catch(fallback);
 
 function fallback(error) {
   console.warn('A cena 3D está indisponível; apresentação estática mantida.', error);
@@ -28,6 +28,7 @@ async function initGlobe() {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, .1, 60);
   const renderer = new THREE.WebGLRenderer({alpha:true, antialias:true, powerPreference:'low-power'});
+  function cancelled(){if(!window.FlashClipBoot?.bypassed)return false;renderer.dispose();renderer.domElement.remove();return true;}
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -64,6 +65,7 @@ async function initGlobe() {
     new GLTFLoader().loadAsync('./models/flashclip-natal.glb'),
     new Promise((_, reject) => setTimeout(() => reject(new Error('Tempo limite de carregamento do modelo.')), 20000))
   ]);
+  if(cancelled())return;
   const emissive = new Map();
   model.scene.traverse(o => {
     // O arquivo traz luzes de apresentação do Blender; a luz interativa é local.
@@ -79,9 +81,11 @@ async function initGlobe() {
 
   // Logo oficial preservada como textura; a placa acompanha a base ao girar.
   const logo = await new THREE.TextureLoader().loadAsync('./imagens/logoFlash.png');
+  if(cancelled())return;
   logo.colorSpace=THREE.SRGBColorSpace;
   const plate = new THREE.Mesh(new THREE.PlaneGeometry(1.13,.39),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false}));
   plate.position.set(0,.372,1.49); world.add(plate);
+  window.FlashClipBoot?.report('globe');
 
   // Vidro: fresnel + reflexos de estúdio, transparente para preservar a neve.
   const glass = new THREE.Mesh(new THREE.SphereGeometry(1.95,96,64,0,Math.PI*2,0,Math.acos((.79-1.95)/1.95)),new THREE.ShaderMaterial({
@@ -169,9 +173,9 @@ async function initGlobe() {
     if(!canMove()) {yaw=targetYaw;pitch=targetPitch;}
     report('Globo na posição inicial.'); schedule();
   }
-  function render(now) {
+  function render(now,initial=false) {
     frame=0;
-    if(disposed||document.hidden||!visible) {previous=0;return;}
+    if(disposed||(!initial&&(document.hidden||!visible))) {previous=0;return;}
     syncRendererSize();
     const dt=previous?Math.min((now-previous)/1000,.05):1/60; previous=now;
     let needsMore=false;
@@ -271,11 +275,24 @@ async function initGlobe() {
     document.body.classList.remove('fc-globe-open');resize();expandButton.focus({preventScroll:true});
   });
   renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();cancelAnimationFrame(frame);frame=0;disposed=true;fallback('WebGL context lost');});
+  window.addEventListener('fc:load-bypass',()=>{disposed=true;cancelAnimationFrame(frame);frame=0;renderer.dispose();renderer.domElement.remove();});
   window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);frame=0;previous=0;});
   window.addEventListener('pageshow',()=>{previous=0;schedule();});
+  await opening.ready;
+  if(cancelled())return;
+  syncRendererSize();
+  if(!lastWidth||!lastHeight)throw new Error('O espaço da prévia ainda não está disponível.');
+  camera.position.set(0,3.05,8.4);camera.lookAt(0,1.9,0);
+  // Aquecer também os materiais do trenó antes de sua primeira passagem.
+  opening.sleigh.visible=true;
+  try {await renderer.compileAsync(scene,camera);} finally {opening.sleigh.visible=false;}
+  if(cancelled())return;
+  if(renderer.getContext().isContextLost())throw new Error('WebGL não está disponível.');
   view.dataset.renderer='webgl';view.dataset.asset='Higgsfield 3D Jutsu';
   expandButton.disabled=false;
   snow.scatter();applyLight();resize();
+  cancelAnimationFrame(frame);frame=0;render(performance.now(),true);
   window.dispatchEvent(new CustomEvent('fc:globe-ready'));
+  window.FlashClipBoot?.report('scene');
   if(reduced.matches)report('Movimento reduzido: use as setas para explorar em passos.');
 }

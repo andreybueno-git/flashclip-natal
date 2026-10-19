@@ -42,10 +42,12 @@ export class GlobeOpening {
     this.trailGeo=new THREE.BufferGeometry();this.trailPositions=new Float32Array(120*3);this.trailGeo.setAttribute('position',new THREE.BufferAttribute(this.trailPositions,3));
     this.trail=new THREE.Points(this.trailGeo,new THREE.PointsMaterial({color:0xffd38b,size:.045,transparent:true,opacity:.7,depthWrite:false}));this.trail.visible=false;scene.add(this.trail);
     view.dataset.sleigh='loading';
-    new GLTFLoader().loadAsync('./models/treno-natal.glb').then(gltf=>{
+    this.ready=new GLTFLoader().loadAsync('./models/treno-natal.glb').then(gltf=>{
       gltf.scene.traverse(o=>{if(o.isLight)o.intensity=0;if(o.isMesh){o.castShadow=false;o.receiveShadow=false;}});
-      this.sleigh.add(gltf.scene);view.dataset.sleigh='higgsfield';this.onChange();
-    }).catch(error=>{view.dataset.sleigh='unavailable';console.warn('Trenó indisponível; entrada direta preservada.',error);});
+      this.sleigh.add(gltf.scene);view.dataset.sleigh='higgsfield';window.FlashClipBoot?.report('sleigh');this.onChange();
+    }).catch(error=>{view.dataset.sleigh='unavailable';throw error;});
+    // O host aguarda a Promise; anexar já evita rejeição sem observador no intervalo.
+    this.ready.catch(()=>{});
   }
   start(){this.reset();this.active=true;this.view.dataset.entryPhase='idle';this.onChange();}
   hit(count,reduced){

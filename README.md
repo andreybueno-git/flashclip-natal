@@ -8,6 +8,8 @@ Duas propostas da página inicial do FlashClip, com o mesmo globo 3D interativo,
 
 O globo responde ao mouse, arrasto, toque e teclado. A abertura pode ser pulada; o som começa após uma interação do visitante.
 
+Uma tela de carregamento prepara globo, trenó, imagem e detalhes do evento antes de revelar a prévia. Se houver falha ou demora excessiva, o visitante pode tentar novamente ou continuar com uma versão leve.
+
 ## Origem e edição
 
 Base do projeto: [PedroNapp/Paradigmas](https://github.com/PedroNapp/Paradigmas). As duas pastas são propostas independentes para comparação. Os modelos locais foram criados no Higgsfield 3D Jutsu; Three.js é distribuído localmente com licença MIT em `vendor/three/LICENSE`. A imagem da hero foi fornecida pelo usuário e preservada sem recompressão. Música e efeitos são síntese original em Web Audio.

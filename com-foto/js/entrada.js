@@ -39,7 +39,7 @@
     subtitle.textContent='Toque no globo 5 vezes para abrir o evento.';
     status.textContent=unavailable?'A versão interativa não está disponível. Você pode entrar diretamente.':'';
     emit('fc:entry-start');
-    if(ready||unavailable)tap.focus({preventScroll:true});
+    if((ready||unavailable)&&!document.documentElement.classList.contains('fc-loading'))tap.focus({preventScroll:true});
     syncPause();
   }
   function hit() {
@@ -182,9 +182,11 @@
     if(active){tap.disabled=false;tap.textContent='Entrar no evento';status.textContent='A versão interativa não está disponível. Você pode entrar diretamente.';}
   });
   window.addEventListener('fc:entry-complete',()=>finish());
+  window.addEventListener('fc:load-bypass',()=>finish({immediate:true}));
+  window.addEventListener('fc:preview-visible',()=>{if(active&&!finishing&&(ready||unavailable))tap.focus({preventScroll:true});});
   reduced.addEventListener('change',()=>{if(reduced.matches&&landing)finishLanding();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&landing)finishLanding();});
   document.querySelector('[data-replay-entry]')?.addEventListener('click',start);
   // Um link para um capítulo continua direto; a abertura é vista uma vez por aba.
-  if(!seen()&&!location.hash) start();
+  if(!window.FlashClipBoot?.bypassed&&!seen()&&!location.hash) start();
 })();
