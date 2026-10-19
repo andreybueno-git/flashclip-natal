@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { SnowPhysics } from './snow-physics.js';
 import { ShakeGesture } from './shake-gesture.js';
-import { GlobeOpening } from './abertura-3d.js';
+import { GlobeOpening } from './abertura-3d.js?v=loading-1';
 
 const view = document.querySelector('.fc-globe-view');
 if (view&&!window.FlashClipBoot?.bypassed) initGlobe().catch(fallback);
