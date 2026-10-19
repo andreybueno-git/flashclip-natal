@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login | FlashClip</title>
+
+    <!-- CSS compartilhado primeiro; personalização do login depois -->
+    <link rel="stylesheet" href="../css/login.css" />
+      <meta name="theme-color" content="#071f1b">
+    <link rel="stylesheet" href="../css/natal.css">
+  </head>
+
+  <body class="natal-theme" data-lights="on">
+    <a class="fc-skip" href="#conteudo">Pular para o conteúdo</a>
+    <header class="navbar navbar-login">
+      <a href="../index.html" class="logo">
+        <img src="../imagens/logoFlash.png" alt="FlashClip" />
+      </a>
+
+      <a href="../index.html" class="voltar voltar-evento">
+        <span class="voltar-seta" aria-hidden="true">←</span>
+        <span>Voltar ao evento</span>
+      </a>
+    </header>
+
+    <main class="login-container" id="conteudo">
+      <section class="login-card">
+        <div class="login-cabecalho">
+          <span class="categoria">FLASHCLIP</span>
+
+          <h1>Bem-vindo de volta</h1>
+
+          <p>Entre na sua conta para continuar.</p>
+        </div>
+
+        <form id="formLogin">
+          <div
+            id="mensagemLogin"
+            class="mensagem-login"
+            role="status"
+            aria-live="polite"
+            hidden
+          ></div>
+          
+          <div class="campo">
+            <label for="email">E-mail</label>
+
+            <input
+              type="email"
+              id="email"
+              placeholder="seu@email.com"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label for="senha">Senha</label>
+
+            <input
+              type="password"
+              id="senha"
+              placeholder="Digite sua senha"
+              required
+            />
+          </div>
+
+          <button type="submit" class="botao-login">Entrar</button>
+        </form>
+
+        <div class="cadastro">
+          <span>Ainda não possui uma conta?</span>
+
+          <a href="../html/cadastro.html">Criar conta</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-login">
+      <div class="footer-frase">
+        <span class="footer-ornamento" aria-hidden="true">✦</span>
+        <p>Transformando momentos em histórias.</p>
+        <span class="footer-ornamento" aria-hidden="true">✦</span>
+      </div>
+
+      <div class="footer-base">
+        <span>© 2026/2 FlashClip. Todos os direitos reservados.</span>
+
+        <span class="footer-natal">
+          <span aria-hidden="true">✧</span>
+          Edição especial de Natal
+        </span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../js/login.js"></script>
+      <script defer src="../js/natal.js"></script>
+  </body>
+</html>
