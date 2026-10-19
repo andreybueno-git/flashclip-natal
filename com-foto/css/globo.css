@@ -115,3 +115,7 @@ body.fc-globe-open { overflow: hidden; }
   .fc-hero-copy .botoes { order: 3; justify-content: center; margin-bottom: 10px; }
 }
 .fc-globe-dialog [data-replay-entry] { display: none; }
+
+/* O canvas acompanha o mouse sem uma moldura retangular ao receber foco. */
+.natal-theme .fc-globe-view:focus { outline: none; }
+.fc-globe-experience:has(.fc-globe-view:focus-visible) .fc-globe-hint { color: #f3eedf; text-decoration: underline; text-underline-offset: 4px; }

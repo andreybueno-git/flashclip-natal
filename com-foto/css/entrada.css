@@ -136,7 +136,8 @@
 }
 .fc-entry-utility > button:hover { color: #e6c88c; text-decoration: underline; text-underline-offset: 5px; }
 .fc-entry :focus-visible { outline: 2px solid #e6c88c; outline-offset: 4px; }
-.fc-entry .fc-globe-view:focus-visible { outline-offset: -6px; }
+.fc-entry .fc-globe-view:focus-visible { outline: none; }
+.fc-entry:has(.fc-globe-view:focus-visible) #entrada-instrucao { text-decoration: underline; text-underline-offset: 4px; }
 body.fc-entry-active { overflow: hidden; }
 /* O espaço da barra de rolagem continua reservado durante a chegada à home. */
 html:has(body.fc-entry-active) { scrollbar-gutter: stable; }
