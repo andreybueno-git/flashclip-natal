@@ -1,12 +1,27 @@
-/* FlashClip · Noite de boas ideias — estudo independente de direção visual. */
+/* FlashClip · camada natalina sobre o design do Pedro (preto, ardósia e dourado). */
 :root {
-  --fc-ink: #071f1b;
-  --fc-pine: #103d32;
-  --fc-paper: #f3eedf;
-  --fc-gold: #e6c88c;
-  --fc-red: #a52e37;
-  --fc-muted: #aebdb2;
-  --fc-line: rgba(230, 200, 140, .22);
+  --fc-ink: #030508;
+  --fc-pine: #11161b;
+  --fc-paper: #f2f2f2;
+  --fc-gold: #f5bd3d;
+  --fc-red: #d7192f;
+  --fc-muted: #a5abb0;
+  --fc-line: rgba(245, 189, 61, .16);
+  /* Notebooks 3D dos cursos (arquivos compartilhados em ../shared). */
+  --fc-computer-base: #090d12;
+  --fc-computer-top: #161d25;
+  --fc-computer-glow: #2a333f75;
+  --fc-computer-accent: #f5bd3d;
+  --fc-computer-muted: #aeb4b8;
+  --fc-computer-frame: #222830;
+  --fc-computer-screen: #080d11;
+  --fc-computer-text: #f2f2f2;
+  --fc-computer-hint: #c9cdd1;
+  --fc-screen-glow: #1c2530;
+  --fc-screen-base: #05080b;
+  --fc-screen-muted: #a5abb0;
+  --fc-screen-rule: #f5bd3d35;
+  --fc-screen-text: #f2f2f2;
 }
 html { scroll-behavior: smooth; scroll-padding-top: 105px; }
 body.natal-theme {
@@ -38,22 +53,22 @@ body.natal-theme {
 }
 .natal-theme .logo img { width: 166px; height: 58px; max-width: none; object-fit: contain; }
 .natal-theme .nav-links { gap: 22px; margin-left: 0; }
-.natal-theme .nav-links a { color: #c1ccbf; font-size: 11px; letter-spacing: .035em; font-weight: 500; }
+.natal-theme .nav-links a { color: #c9cdd1; font-size: 11px; letter-spacing: .035em; font-weight: 500; }
 .natal-theme .nav-links a:hover, .natal-theme .nav-links a.ativo { color: var(--fc-gold); }
 .natal-theme .nav-links a::after { background: var(--fc-gold); height: 1px; }
 .natal-theme .usuario { background: transparent; color: var(--fc-gold); border: 1px solid var(--fc-line); box-shadow: none; }
 .natal-theme .nome-usuario { color: var(--fc-muted); font-size: 10px; }
 .natal-theme .inscricoes { background: var(--fc-paper); color: var(--fc-ink); border: 0; border-radius: 3px; font-weight: 600; font-size: 12px; padding: 12px 19px; }
 .natal-theme .botao-menu { color: var(--fc-paper); background: transparent; border-color: var(--fc-line); }
-.natal-theme .menu-mobile { background: #0e3028; border: 1px solid var(--fc-line); border-radius: 0 0 12px 12px; box-shadow: 0 24px 45px #0005; }
+.natal-theme .menu-mobile { background: #0d1217; border: 1px solid var(--fc-line); border-radius: 0 0 12px 12px; box-shadow: 0 24px 45px #0005; }
 .natal-theme .menu-links a { color: var(--fc-paper); }
-.natal-theme .menu-links a.ativo { color: var(--fc-gold); background: #e6c88c0d; }
+.natal-theme .menu-links a.ativo { color: var(--fc-gold); background: #f5bd3d0d; }
 .natal-theme .voltar-evento, .natal-theme .botao-voltar { color: var(--fc-gold); border-color: var(--fc-line); background: transparent; }
 
 /* Abertura: uma ideia vira um ornamento. O conteúdo segue sendo HTML. */
 .fc-home { overflow: clip; }
 .fc-hero { position: relative; isolation: isolate; min-height: 700px; padding: 48px 7% 0; }
-.fc-hero::before { content: ''; position: absolute; inset: 0; z-index: -2; background: radial-gradient(ellipse at 83% 45%, #2d60423b, transparent 52%); }
+.fc-hero::before { content: ''; position: absolute; inset: 0; z-index: -2; background: radial-gradient(ellipse at 83% 45%, #124b333b, transparent 52%); }
 .fc-hero::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .12; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 170 170' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' opacity='.28' filter='url(%23n)' d='M0 0h170v170H0z'/%3E%3C/svg%3E"); }
 .fc-eyebrow { display: flex; align-items: center; gap: 12px; color: var(--fc-gold); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
 .fc-eyebrow::before { content: ''; width: 27px; height: 1px; background: currentColor; }
@@ -63,7 +78,7 @@ body.natal-theme {
 .fc-hero-copy { padding: 28px 0 40px; z-index: 2; }
 .fc-hero-copy h1 { background: none; -webkit-text-fill-color: currentColor; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(64px, 6.7vw, 105px); font-weight: 400; line-height: .98; letter-spacing: -.055em; margin: 0 0 28px; color: var(--fc-paper); }
 .fc-hero-copy h1 em { color: var(--fc-gold); font-weight: 400; }
-.fc-hero-copy > p { max-width: 340px; color: #c2ccbf; font-size: 14px; line-height: 1.85; }
+.fc-hero-copy > p { max-width: 340px; color: #c9cdd1; font-size: 14px; line-height: 1.85; }
 .fc-hero-copy .botoes { justify-content: flex-start; margin: 29px 0 0; gap: 22px; }
 .natal-theme .botao-principal, .natal-theme .botao-curso, .natal-theme .botao-contato {
   display: inline-flex; justify-content: center; align-items: center; gap: 24px;
@@ -72,12 +87,12 @@ body.natal-theme {
   font-family: inherit; font-weight: 600; font-size: 13px; text-decoration: none;
   box-shadow: none; transition: background .2s, translate .25s;
 }
-.natal-theme .botao-principal:hover, .natal-theme .botao-curso:hover, .natal-theme .botao-contato:hover { background: #f6dba3; color: #071f1b; translate: 0 -2px; }
+.natal-theme .botao-principal:hover, .natal-theme .botao-curso:hover, .natal-theme .botao-contato:hover { background: #ffd45e; color: #030508; translate: 0 -2px; }
 .natal-theme .botao-secundario { background: transparent; border: 0; border-bottom: 1px solid var(--fc-line); color: var(--fc-paper); border-radius: 0; padding: 10px 0; text-decoration: none; font-size: 12px; }
 .fc-ornament-stage { position: relative; min-width: 0; width: 100%; height: 515px; display: grid; place-items: center; perspective: 900px; }
 .fc-scene { width: min(100%, 530px); aspect-ratio: 1; transform: translateY(calc(var(--fc-drift, 0) * -32px)) rotateX(var(--fc-rx, 0deg)) rotateY(var(--fc-ry, 0deg)); transition: transform .4s ease-out; will-change: transform; }
 .fc-scene svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.fc-glass { fill: url(#fc-glass); stroke: #e7ca8b65; stroke-width: 1; }
+.fc-glass { fill: url(#fc-glass); stroke: #f5bd3d65; stroke-width: 1; }
 .fc-emblem { filter: drop-shadow(0 4px 6px #0008); }
 .fc-halo { opacity: .7; transition: opacity .8s; }
 .fc-bulb { filter: url(#fc-glow); transition: opacity .6s; }
@@ -86,14 +101,14 @@ body.natal-theme {
 .fc-stamp { position: absolute; right: 0; top: 46%; width: 76px; height: 76px; border: 1px solid var(--fc-line); border-radius: 50%; display: grid; place-content: center; text-align: center; color: var(--fc-gold); rotate: 12deg; font-size: 8px; letter-spacing: .14em; line-height: 1.8; }
 .fc-stamp b { font: italic 28px Georgia, serif; letter-spacing: -.05em; }
 .fc-scene-controls { position: absolute; bottom: 9px; left: 50%; translate: -50% 0; display: flex; gap: 18px; white-space: nowrap; }
-.fc-scene-controls button { border: 0; border-bottom: 1px solid var(--fc-line); padding: 9px 0; background: none; color: #bac8b7; font: inherit; font-size: 10px; cursor: pointer; letter-spacing: .03em; }
+.fc-scene-controls button { border: 0; border-bottom: 1px solid var(--fc-line); padding: 9px 0; background: none; color: #aeb4b8; font: inherit; font-size: 10px; cursor: pointer; letter-spacing: .03em; }
 .fc-scene-controls button:hover { color: var(--fc-gold); }
-.fc-light-icon { display: inline-block; width: 6px; height: 6px; margin-right: 8px; background: var(--fc-gold); border-radius: 50%; box-shadow: 0 0 10px #e6c88c; }
+.fc-light-icon { display: inline-block; width: 6px; height: 6px; margin-right: 8px; background: var(--fc-gold); border-radius: 50%; box-shadow: 0 0 10px #f5bd3d; }
 .natal-theme[data-lights="off"] .fc-halo, .natal-theme[data-lights="off"] .fc-bulb { opacity: .12; }
-.natal-theme[data-lights="off"] .fc-light-icon { background: #758378; box-shadow: none; }
+.natal-theme[data-lights="off"] .fc-light-icon { background: #6b7178; box-shadow: none; }
 .natal-theme[data-lights="off"] .fc-emblem { opacity: .65; }
 .fc-snow { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: -1; }
-.fc-snow i { position: absolute; left: var(--left); top: -12px; width: var(--size); height: var(--size); border-radius: 50%; background: #e7d9b2; opacity: .32; animation: fc-fall var(--duration) linear infinite; animation-delay: var(--delay); }
+.fc-snow i { position: absolute; left: var(--left); top: -12px; width: var(--size); height: var(--size); border-radius: 50%; background: #e8e8e8; opacity: .32; animation: fc-fall var(--duration) linear infinite; animation-delay: var(--delay); }
 .fc-event-bar { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding: 26px 0; border-top: 1px solid var(--fc-line); }
 .fc-event-date { display: flex; align-items: center; gap: 18px; }
 .fc-event-date > strong { font: 400 42px Georgia, serif; letter-spacing: -.04em; color: var(--fc-paper); }
@@ -104,7 +119,7 @@ body.natal-theme {
 .fc-time { min-width: 34px; text-align: center; }
 .fc-time strong { display: block; color: var(--fc-paper); font-family: Georgia, serif; font-size: 29px; font-weight: 400; line-height: 1.2; font-variant-numeric: tabular-nums; }
 .fc-time span { color: var(--fc-muted); font-size: 8px; text-transform: uppercase; letter-spacing: .13em; }
-.fc-scroll-cue { display: flex; align-items: center; justify-content: space-between; padding: 20px 7%; border-top: 1px solid var(--fc-line); background: #0b2a22; }
+.fc-scroll-cue { display: flex; align-items: center; justify-content: space-between; padding: 20px 7%; border-top: 1px solid var(--fc-line); background: #080d11; }
 .fc-scroll-cue span { color: var(--fc-muted); font-size: 9px; letter-spacing: .17em; text-transform: uppercase; }
 .fc-scroll-cue a { color: var(--fc-gold); font-size: 11px; text-decoration: none; }
 
@@ -122,7 +137,7 @@ body.natal-theme {
 .natal-theme .fc-home .parceiros h2 { color: var(--fc-paper); font: 400 28px Georgia, serif; margin: 8px 0; }
 .natal-theme .fc-home .parceiros p { color: var(--fc-muted); font-size: 12px; max-width: 340px; }
 .natal-theme .fc-home .lista-parceiros { margin: 0; justify-content: flex-end; }
-.natal-theme .fc-home .parceiro { background: #103d32; padding: 18px 25px; border: 1px solid var(--fc-line); border-radius: 2px; box-shadow: none; min-width: 150px; }
+.natal-theme .fc-home .parceiro { background: #11161b; padding: 18px 25px; border: 1px solid var(--fc-line); border-radius: 2px; box-shadow: none; min-width: 150px; }
 .natal-theme .fc-home .parceiro img { max-width: 145px; max-height: 55px; }
 .natal-theme .motivos { padding: 95px 7%; }
 .natal-theme .titulo-motivos, .natal-theme .titulo-cursos { text-align: left; max-width: none; margin: 0 0 45px; }
@@ -132,73 +147,73 @@ body.natal-theme {
 .natal-theme .lista-motivos { gap: 0; border-top: 1px solid var(--fc-line); }
 .natal-theme .card-motivo { border: 0; border-right: 1px solid var(--fc-line); border-radius: 0; padding: 32px 24px; background: none; box-shadow: none; }
 .natal-theme .card-motivo:last-child { border-right: 0; }
-.natal-theme .card-motivo:hover { background: #e6c88c08; transform: translateY(-4px); }
-.natal-theme .numero-motivo { position: static; font: italic 30px Georgia, serif; color: #a2b19e; }
+.natal-theme .card-motivo:hover { background: #f5bd3d08; transform: translateY(-4px); }
+.natal-theme .numero-motivo { position: static; font: italic 30px Georgia, serif; color: #a5abb0; }
 .natal-theme .icone-motivo { color: var(--fc-gold); background: transparent; border: 0; margin-top: 30px; }
 .natal-theme .card-motivo h3 { color: var(--fc-paper); font-size: 16px; }
 .natal-theme .card-motivo p { color: var(--fc-muted); font-size: 12px; }
 .natal-theme .cursos { background: transparent; padding-top: 85px; padding-bottom: 85px; }
-.natal-theme .card-curso { background: #12392e; border: 1px solid var(--fc-line); border-radius: 7px; box-shadow: none; }
+.natal-theme .card-curso { background: linear-gradient(145deg, rgba(22, 29, 37, .97), rgba(9, 14, 19, .97)); border: 1px solid rgba(255, 255, 255, .09); border-radius: 16px; box-shadow: 0 15px 40px rgba(0, 0, 0, .28); }
 .natal-theme .card-curso::before { display: none; }
-.natal-theme .card-curso:hover { border-color: #e6c88c88; box-shadow: 0 15px 40px #0002; }
+.natal-theme .card-curso:hover { border-color: #f5bd3d88; box-shadow: 0 15px 40px #0002; }
 .natal-theme .conteudo-curso h3 { color: var(--fc-paper); font-size: 22px; }
-.natal-theme .descricao-curso, .natal-theme .titulo-instrutores span, .natal-theme .quantidade-instrutores { color: #b5c4b6; }
+.natal-theme .descricao-curso, .natal-theme .titulo-instrutores span, .natal-theme .quantidade-instrutores { color: #aeb4b8; }
 .natal-theme .informacoes-curso, .natal-theme .info-item { border-color: var(--fc-line); }
 /* A grade acompanha a largura do card, inclusive em painéis estreitos. */
 .natal-theme .informacoes-curso { grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.5rem), 1fr)); }
 .natal-theme .info-item > div { flex: 1; min-width: 0; }
 .natal-theme .info-item :is(small, strong) { white-space: normal; overflow-wrap: anywhere; }
-.natal-theme .info-item small { color: #a8bba9; }
+.natal-theme .info-item small { color: #a5abb0; }
 .natal-theme .info-item strong { color: var(--fc-paper); }
-.natal-theme .icone-info { color: var(--fc-gold); background: #e6c88c0d; }
-.natal-theme .status-curso { background: #102d25ed; color: var(--fc-gold); border-color: var(--fc-line); }
+.natal-theme .icone-info { color: var(--fc-gold); background: #f5bd3d0d; }
+.natal-theme .status-curso { background: #0d1217ed; color: var(--fc-gold); border-color: var(--fc-line); }
 .natal-theme .titulo-cursos { display: block; }
-.fc-closing { padding: 70px 7%; display: flex; justify-content: space-between; align-items: center; gap: 35px; background: var(--fc-red); }
-.fc-closing p { font-size: 10px; letter-spacing: .15em; color: #efc5bb; text-transform: uppercase; margin-bottom: 14px; }
-.fc-closing h2 { font: 400 clamp(38px, 4vw, 60px)/1.05 Georgia, serif; color: #fff1da; letter-spacing: -.04em; }
-.fc-closing .botao-principal { background: #f3eedf; border-color: #f3eedf; }
-.natal-theme footer { background: #061a16; border-top: 1px solid var(--fc-line); padding: 30px 7%; }
-.natal-theme footer p, .natal-theme footer a, .natal-theme footer .footer-base { color: #a7b7a7; }
+.fc-closing { padding: 70px 7%; display: flex; justify-content: space-between; align-items: center; gap: 35px; background: radial-gradient(ellipse at 85% 50%, rgba(245, 189, 61, .1), transparent 45%), linear-gradient(145deg, #161d25, #090d12); border-top: 1px solid var(--fc-line); }
+.fc-closing p { font-size: 10px; letter-spacing: .15em; color: #f5bd3d; text-transform: uppercase; margin-bottom: 14px; }
+.fc-closing h2 { font: 400 clamp(38px, 4vw, 60px)/1.05 Georgia, serif; color: #ffffff; letter-spacing: -.04em; }
+
+.natal-theme footer { background: #0b0b0b; border-top: 1px solid var(--fc-line); padding: 30px 7%; }
+.natal-theme footer p, .natal-theme footer a, .natal-theme footer .footer-base { color: #a5abb0; }
 .natal-theme footer a:hover { color: var(--fc-gold); }
 .natal-theme footer::before, .natal-theme footer::after { display: none; }
 
 /* A mesma identidade nas páginas de conteúdo, conta e administração. */
-.natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) { position: relative; padding-top: 80px; padding-bottom: 55px; border-bottom: 1px solid var(--fc-line); background: radial-gradient(ellipse at 50% -40%, #41724b52, transparent 75%); }
+.natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) { position: relative; padding-top: 80px; padding-bottom: 55px; border-bottom: 1px solid var(--fc-line); background: radial-gradient(ellipse at 50% -40%, #124b3352, transparent 75%); }
 .natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) h1 { color: var(--fc-paper); background: none; -webkit-text-fill-color: currentColor; font: 400 clamp(44px, 5vw, 72px)/1.05 Georgia, serif; letter-spacing: -.045em; }
 .natal-theme :is(.cursos-intro, .programacao-intro, .patrocinadores-intro, .faq-intro, .contato-intro, .instrutores-intro, .sobre-intro) > span { color: var(--fc-gold); font-size: 10px; letter-spacing: .16em; }
-.natal-theme :is(.evento-conteudo, .bloco-sobre, .faq-item, .card-patrocinador, .info-card, .card-instrutor, .login-card, .cadastro-card, .card-matricula, .card-inscricao, .painel, .cards .card) { background: #12382e; border: 1px solid var(--fc-line); border-radius: 8px; box-shadow: none; }
+.natal-theme :is(.evento-conteudo, .bloco-sobre, .faq-item, .card-patrocinador, .info-card, .card-instrutor, .login-card, .cadastro-card, .card-matricula, .card-inscricao, .painel, .cards .card) { background: #11161b; border: 1px solid var(--fc-line); border-radius: 8px; box-shadow: none; }
 .natal-theme :is(.login-card, .cadastro-card) { border-top: 2px solid var(--fc-gold); }
 .natal-theme :is(.login-card, .cadastro-card)::before, .natal-theme :is(.login-card, .cadastro-card)::after { display: none; }
 .natal-theme :is(.login-card, .cadastro-card, .card-matricula) h1 { font-family: Georgia, serif; font-weight: 400; letter-spacing: -.035em; color: var(--fc-paper); }
-.natal-theme .campo label { color: #dddcc9; }
-.natal-theme .campo :is(input, select) { background: #08271f; border-color: #afc39c4d; color: var(--fc-paper); border-radius: 4px; font-family: inherit; }
-.natal-theme .campo :is(input, select)::placeholder { color: #9aaf9f; }
-.natal-theme .campo :is(input, select):focus { border-color: var(--fc-gold); outline: 2px solid #e6c88c26; }
+.natal-theme .campo label { color: #d6d6d6; }
+.natal-theme .campo :is(input, select) { background: #0d1217; border-color: #a5abb04d; color: var(--fc-paper); border-radius: 4px; font-family: inherit; }
+.natal-theme .campo :is(input, select)::placeholder { color: #9da1a5; }
+.natal-theme .campo :is(input, select):focus { border-color: var(--fc-gold); outline: 2px solid #f5bd3d26; }
 .natal-theme :is(.botao-login, .botao-cadastro, .botao-confirmar) { background: var(--fc-gold); color: var(--fc-ink); border-radius: 4px; font-family: inherit; }
-.natal-theme :is(.botao-login, .botao-cadastro, .botao-confirmar):hover { background: #f3dba9; }
+.natal-theme :is(.botao-login, .botao-cadastro, .botao-confirmar):hover { background: #ffd45e; }
 .natal-theme .faq-item summary { color: var(--fc-paper); }
-.natal-theme .faq-item[open] { border-color: #e6c88c88; }
+.natal-theme .faq-item[open] { border-color: #f5bd3d88; }
 .natal-theme .faq-item .numero, .natal-theme .faq-item .icone { color: var(--fc-gold); }
 .natal-theme .filtro.ativo { background: var(--fc-gold); color: var(--fc-ink); border-color: var(--fc-gold); }
 .natal-theme .filtro { border-color: var(--fc-line); }
-.natal-theme .cta { background: #103c30; border: 1px solid var(--fc-line); border-radius: 8px; }
+.natal-theme .cta { background: #11161b; border: 1px solid var(--fc-line); border-radius: 8px; }
 .natal-theme .cta h2 { font-family: Georgia, serif; color: var(--fc-paper); }
 .natal-theme .cta > span { color: var(--fc-gold); }
-.natal-theme .cabecalho { background: #10382d; border-color: var(--fc-line); }
-/* Home atualizada pelo Pedro: céu estrelado e ilustrações natalinas,
-   mantendo o verde-escuro da campanha no lugar do preto da base. */
+.natal-theme .cabecalho { background: #11161b; border-color: var(--fc-line); }
+/* Home atualizada pelo Pedro: céu estrelado, ilustrações natalinas
+   e a paleta escura dele, com o 3D e as animações por cima. */
 .natal-theme main.fc-home { background-color: var(--fc-ink); }
 .natal-theme main.fc-home::before {
   background-image:
     url("../imagens/Decoracoes/ceu-estrelado-natal.svg"),
-    radial-gradient(ellipse at 12% 18%, #2d604233, transparent 34%),
-    radial-gradient(ellipse at 87% 45%, #e6c88c12, transparent 30%);
+    radial-gradient(ellipse at 12% 18%, #124b3333, transparent 34%),
+    radial-gradient(ellipse at 87% 45%, #f5bd3d12, transparent 30%);
 }
 .natal-theme .fc-home :is(.sobre, .parceiros, .motivos, .cursos) { border-top: 1px solid var(--fc-line); }
-.natal-theme .fc-home .sobre { background-image: radial-gradient(ellipse at 17% 52%, #2d604230, transparent 36%) !important; }
-.natal-theme .fc-home .parceiros { background-image: radial-gradient(ellipse at 80% 45%, #e6c88c14, transparent 32%) !important; }
-.natal-theme .fc-home .motivos { background-image: radial-gradient(ellipse at 12% 55%, #2d604226, transparent 30%), radial-gradient(ellipse at 88% 18%, #e6c88c0d, transparent 28%) !important; }
-.natal-theme .fc-home .cursos { background-image: radial-gradient(ellipse at 50% 5%, #e6c88c12, transparent 40%) !important; }
+.natal-theme .fc-home .sobre { background-image: radial-gradient(ellipse at 17% 52%, #124b3330, transparent 36%) !important; }
+.natal-theme .fc-home .parceiros { background-image: radial-gradient(ellipse at 80% 45%, #f5bd3d14, transparent 32%) !important; }
+.natal-theme .fc-home .motivos { background-image: radial-gradient(ellipse at 12% 55%, #124b3326, transparent 30%), radial-gradient(ellipse at 88% 18%, #f5bd3d0d, transparent 28%) !important; }
+.natal-theme .fc-home .cursos { background-image: radial-gradient(ellipse at 50% 5%, #f5bd3d12, transparent 40%) !important; }
 /* As ilustrações aparecem só com espaço lateral, como no original. */
 .natal-theme .fc-home .sobre::before { left: max(22px, calc((100% - 1500px) / 2)); }
 @media (min-width: 1121px) {
@@ -209,7 +224,7 @@ body.natal-theme {
 /* Rótulos e títulos alinhados à esquerda: traço dourado só à direita. */
 .natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos, .titulo-cursos) > span { display: inline-flex; justify-content: flex-start; }
 .natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos) > span::before { display: none; }
-.natal-theme .fc-home :is(.sobre h2, .parceiros-titulo h2, .titulo-motivos h2, .titulo-cursos h2)::after { margin-left: 0; background: linear-gradient(90deg, var(--fc-gold), #e6c88c26); box-shadow: 0 0 18px #e6c88c26; }
+.natal-theme .fc-home :is(.sobre h2, .parceiros-titulo h2, .titulo-motivos h2, .titulo-cursos h2)::after { margin-left: 0; background: linear-gradient(90deg, var(--fc-gold), #f5bd3d26); box-shadow: 0 0 18px #f5bd3d26; }
 .natal-theme .fc-home .titulo-cursos::before { content: none; }
 .natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos, .titulo-cursos) > p { color: var(--fc-muted); }
 .fc-motion-ready .fc-reveal { opacity: 0; translate: 0 18px; transition: opacity .65s, translate .65s; }

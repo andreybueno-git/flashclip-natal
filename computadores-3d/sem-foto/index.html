@@ -8,26 +8,26 @@
 <style id="fc-loading-critical">
 html.fc-loading body{overflow:hidden!important}
 html.fc-loading body>:not(#fc-loading):not(script):not(style):not(noscript){visibility:hidden!important}
-#fc-loading{position:fixed;inset:0;z-index:30000;display:grid;place-items:center;padding:28px;background:radial-gradient(ellipse at 50% 42%,#174d3b88,transparent 64%),#061c18;color:#f3eedf;text-align:center;overflow:auto;transition:opacity .4s ease;font-family:'Avenir Next','Trebuchet MS',Arial,sans-serif}
+#fc-loading{position:fixed;inset:0;z-index:30000;display:grid;place-items:center;padding:28px;background:radial-gradient(ellipse at 50% 42%,#124b3388,transparent 64%),#030508;color:#f2f2f2;text-align:center;overflow:auto;transition:opacity .4s ease;font-family:'Avenir Next','Trebuchet MS',Arial,sans-serif}
 #fc-loading[hidden]{display:none!important}
 #fc-loading.fc-loading-leaving{opacity:0;pointer-events:none}
 .fc-loading-content{width:min(390px,100%)}
 .fc-loading-logo{width:146px;height:auto;display:block;margin:0 auto 35px}
-.fc-loading-orb{position:relative;width:126px;height:126px;margin:0 auto 25px;border:1px solid #e6c88c44;border-radius:50%;background:radial-gradient(circle at 30% 22%,#e6c88c22,transparent 55%);box-shadow:inset 0 0 30px #a1dec509,0 0 60px #e6c88c09;display:grid;place-items:center}
-.fc-loading-orb::before{content:'';position:absolute;inset:-7px;border:1px solid transparent;border-top-color:#e6c88c;border-right-color:#e6c88c55;border-radius:50%;animation:fc-load-orbit 2.2s linear infinite}
+.fc-loading-orb{position:relative;width:126px;height:126px;margin:0 auto 25px;border:1px solid #f5bd3d44;border-radius:50%;background:radial-gradient(circle at 30% 22%,#f5bd3d22,transparent 55%);box-shadow:inset 0 0 30px #f5bd3d09,0 0 60px #f5bd3d09;display:grid;place-items:center}
+.fc-loading-orb::before{content:'';position:absolute;inset:-7px;border:1px solid transparent;border-top-color:#f5bd3d;border-right-color:#f5bd3d55;border-radius:50%;animation:fc-load-orbit 2.2s linear infinite}
 .fc-loading-orb svg{width:65px;height:80px;overflow:visible}
 .fc-loading-flake{animation:fc-load-flake 2.5s ease-in-out infinite alternate;transform-origin:center}
 .fc-loading-flake:nth-of-type(2){animation-delay:-1.1s}.fc-loading-flake:nth-of-type(3){animation-delay:-1.8s}
-#fc-loading h1{font:400 clamp(27px,5vw,34px)/1.15 Georgia,'Times New Roman',serif;letter-spacing:-.035em;margin:0 0 13px;color:#f3eedf}
-.fc-loading-message{font-size:12px;line-height:1.8;color:#bfccbc;margin:0 auto;min-height:44px;max-width:340px}
-.fc-loading-steps{display:flex;justify-content:center;gap:24px;padding:0;margin:25px 0 0;list-style:none;font-size:10px;letter-spacing:.06em;color:#849e8b}
-.fc-loading-steps li::before{content:'';display:block;width:5px;height:5px;border:1px solid #8a9b7766;border-radius:50%;margin:0 auto 9px}
-.fc-loading-steps li[data-ready="true"]{color:#e6c88c}.fc-loading-steps li[data-ready="true"]::before{background:#e6c88c;border-color:#e6c88c;box-shadow:0 0 10px #e6c88c55}
-.fc-loading-note{margin:24px 0 0;font-size:10px;line-height:1.7;color:#8ba591}
+#fc-loading h1{font:400 clamp(27px,5vw,34px)/1.15 Georgia,'Times New Roman',serif;letter-spacing:-.035em;margin:0 0 13px;color:#f2f2f2}
+.fc-loading-message{font-size:12px;line-height:1.8;color:#aeb4b8;margin:0 auto;min-height:44px;max-width:340px}
+.fc-loading-steps{display:flex;justify-content:center;gap:24px;padding:0;margin:25px 0 0;list-style:none;font-size:10px;letter-spacing:.06em;color:#858d95}
+.fc-loading-steps li::before{content:'';display:block;width:5px;height:5px;border:1px solid #858d9566;border-radius:50%;margin:0 auto 9px}
+.fc-loading-steps li[data-ready="true"]{color:#f5bd3d}.fc-loading-steps li[data-ready="true"]::before{background:#f5bd3d;border-color:#f5bd3d;box-shadow:0 0 10px #f5bd3d55}
+.fc-loading-note{margin:24px 0 0;font-size:10px;line-height:1.7;color:#858d95}
 .fc-loading-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:24px}.fc-loading-actions[hidden]{display:none}
-.fc-loading-actions button{font:600 12px 'Avenir Next',Arial,sans-serif;min-height:44px;padding:12px 19px;border:1px solid #e6c88c55;background:transparent;border-radius:25px;color:#e6c88c;cursor:pointer}.fc-loading-actions button:first-child{background:#e6c88c;color:#071f1b;border-color:#e6c88c}
-#fc-loading button:focus-visible{outline:2px solid #e6c88c;outline-offset:5px}
-#fc-loading[data-state="error"] .fc-loading-orb::before{animation:none;border-color:#e6c88c55}
+.fc-loading-actions button{font:600 12px 'Avenir Next',Arial,sans-serif;min-height:44px;padding:12px 19px;border:1px solid #f5bd3d55;background:transparent;border-radius:25px;color:#f5bd3d;cursor:pointer}.fc-loading-actions button:first-child{background:#f5bd3d;color:#030508;border-color:#f5bd3d}
+#fc-loading button:focus-visible{outline:2px solid #f5bd3d;outline-offset:5px}
+#fc-loading[data-state="error"] .fc-loading-orb::before{animation:none;border-color:#f5bd3d55}
 .fc-globe-view[data-renderer="fallback"] .fc-globe-canvas{display:none}
 @keyframes fc-load-orbit{to{transform:rotate(360deg)}}@keyframes fc-load-flake{from{transform:translateY(-4px);opacity:.4}to{transform:translateY(5px);opacity:1}}
 @media(prefers-reduced-motion:reduce){#fc-loading,#fc-loading *{animation:none!important;transition:none!important}}
@@ -67,14 +67,14 @@ html.fc-loading body>:not(#fc-loading):not(script):not(style):not(noscript){visi
     <link rel="stylesheet" href="./css/cabecalho.css" />
     <link rel="stylesheet" href="./css/home.css?v=pedro-1" />
     <link rel="stylesheet" href="./css/rodape.css" />
-      <meta name="theme-color" content="#071f1b">
-    <link rel="stylesheet" href="css/natal.css?v=pedro-1">
-    <link rel="stylesheet" href="../shared/course-computers.css?v=ready-1">
-    <link rel="stylesheet" href="css/globo.css?v=mobile-touch-2">
-    <link rel="stylesheet" href="css/entrada.css?v=mobile-touch-1">
+      <meta name="theme-color" content="#030508">
+    <link rel="stylesheet" href="css/natal.css?v=pedro-2">
+    <link rel="stylesheet" href="../shared/course-computers.css?v=pedro-2">
+    <link rel="stylesheet" href="css/globo.css?v=pedro-2">
+    <link rel="stylesheet" href="css/entrada.css?v=pedro-2">
     <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
-    <script defer src="../shared/course-computers-loader.js?v=ready-1"></script>
-    <script type="module" src="js/globo.js?v=scroll-1"></script>
+    <script defer src="../shared/course-computers-loader.js?v=pedro-2"></script>
+    <script type="module" src="js/globo.js?v=pedro-2"></script>
   </head>
 
   <body class="natal-theme" data-lights="on">
@@ -82,7 +82,7 @@ html.fc-loading body>:not(#fc-loading):not(script):not(style):not(noscript){visi
       <div class="fc-loading-content">
         <img class="fc-loading-logo" src="./imagens/logoFlash.png" width="146" height="50" alt="FlashClip">
         <div class="fc-loading-orb" aria-hidden="true">
-          <svg viewBox="0 0 70 85" fill="none"><path d="M35 15 21 38h8L17 57h36L41 38h8L35 15Z" fill="#264f3e" stroke="#cdb77c" stroke-width="1.2"/><path d="M35 6v7m-3.5-3.5h7M35 58v10M17 70h36" stroke="#e6c88c" stroke-width="1.4" stroke-linecap="round"/><circle class="fc-loading-flake" cx="13" cy="24" r="1.4" fill="#f3eedf"/><circle class="fc-loading-flake" cx="57" cy="37" r="1.2" fill="#f3eedf"/><circle class="fc-loading-flake" cx="21" cy="46" r="1" fill="#f3eedf"/></svg>
+          <svg viewBox="0 0 70 85" fill="none"><path d="M35 15 21 38h8L17 57h36L41 38h8L35 15Z" fill="#183626" stroke="#f5bd3d" stroke-width="1.2"/><path d="M35 6v7m-3.5-3.5h7M35 58v10M17 70h36" stroke="#f5bd3d" stroke-width="1.4" stroke-linecap="round"/><circle class="fc-loading-flake" cx="13" cy="24" r="1.4" fill="#f2f2f2"/><circle class="fc-loading-flake" cx="57" cy="37" r="1.2" fill="#f2f2f2"/><circle class="fc-loading-flake" cx="21" cy="46" r="1" fill="#f2f2f2"/></svg>
         </div>
         <h1>Preparando seu Natal.</h1>
         <p class="fc-loading-message" data-loading-message role="status" aria-live="polite">Carregando os detalhes do nosso pequeno mundo…</p>
@@ -194,12 +194,12 @@ html.fc-loading body>:not(#fc-loading):not(script):not(style):not(noscript){visi
           <div class="fc-globe-fallback" aria-hidden="true"><svg viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <radialGradient id="fc-glass" cx=".3" cy=".2" r=".85">
-              <stop stop-color="#c1e2b9" stop-opacity=".16"/>
-              <stop offset=".35" stop-color="#518471" stop-opacity=".06"/>
-              <stop offset=".75" stop-color="#071f1b" stop-opacity=".04"/>
-              <stop offset="1" stop-color="#b2d3ac" stop-opacity=".22"/>
+              <stop stop-color="#d6dde4" stop-opacity=".16"/>
+              <stop offset=".35" stop-color="#3a4652" stop-opacity=".06"/>
+              <stop offset=".75" stop-color="#030508" stop-opacity=".04"/>
+              <stop offset="1" stop-color="#c9d2dc" stop-opacity=".22"/>
             </radialGradient>
-            <radialGradient id="fc-aura"><stop stop-color="#c8a459" stop-opacity=".38"/><stop offset="1" stop-color="#c8a459" stop-opacity="0"/></radialGradient>
+            <radialGradient id="fc-aura"><stop stop-color="#f5bd3d" stop-opacity=".38"/><stop offset="1" stop-color="#f5bd3d" stop-opacity="0"/></radialGradient>
             <linearGradient id="fc-metal" x1="0" x2="1"><stop stop-color="#7e5c2f"/><stop offset=".45" stop-color="#f8dfa8"/><stop offset="1" stop-color="#927448"/></linearGradient>
             <filter id="fc-glow" x="-300%" y="-300%" width="700%" height="700%"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             <filter id="fc-soft"><feGaussianBlur stdDeviation="14"/></filter>
@@ -207,17 +207,17 @@ html.fc-loading body>:not(#fc-loading):not(script):not(style):not(noscript){visi
           </defs>
           <ellipse cx="275" cy="495" rx="157" ry="13" fill="#000" opacity=".2" filter="url(#fc-soft)"/>
           <circle class="fc-halo" cx="270" cy="285" r="230" fill="url(#fc-aura)"/>
-          <path d="M270-30V65" stroke="#d1b47b" stroke-width="1"/>
+          <path d="M270-30V65" stroke="#d6a84f" stroke-width="1"/>
           <ellipse cx="270" cy="78" rx="14" ry="18" fill="none" stroke="url(#fc-metal)" stroke-width="4"/>
           <path d="M245 101 250 85H290L296 101V113H245Z" fill="url(#fc-metal)"/>
           <path d="M253 89V106M261 89V106M270 89V106M279 89V106M287 89V106" stroke="#705327" opacity=".6"/>
           <circle class="fc-glass" cx="270" cy="286" r="179"/>
           <g clip-path="url(#fc-sphere)">
             <path d="M85 349Q268 440 458 321" stroke="#d6b974" stroke-width=".8" fill="none" opacity=".55"/>
-            <path d="M111 214Q265 145 428 218" stroke="#c2d9b4" stroke-width=".5" fill="none" opacity=".2"/>
+            <path d="M111 214Q265 145 428 218" stroke="#c9d2dc" stroke-width=".5" fill="none" opacity=".2"/>
             <image class="fc-emblem" href="./imagens/logo.png" x="172" y="164" width="196" height="239" preserveAspectRatio="xMidYMid meet"/>
-            <path d="M149 204Q114 281 144 342" stroke="#f5ecd3" stroke-width="11" stroke-linecap="round" fill="none" opacity=".09"/>
-            <path d="M399 336Q417 294 406 249" stroke="#f5ecd3" stroke-width="3" stroke-linecap="round" fill="none" opacity=".19"/>
+            <path d="M149 204Q114 281 144 342" stroke="#f2f2f2" stroke-width="11" stroke-linecap="round" fill="none" opacity=".09"/>
+            <path d="M399 336Q417 294 406 249" stroke="#f2f2f2" stroke-width="3" stroke-linecap="round" fill="none" opacity=".19"/>
             <ellipse cx="212" cy="164" rx="43" ry="15" fill="#f3e6c8" opacity=".08" transform="rotate(-31 212 164)"/>
             <g class="fc-bulb" fill="#ffe4a3">
               <circle cx="133" cy="367" r="2.7"/><circle cx="175" cy="385" r="3"/><circle cx="224" cy="394" r="2.5"/>
@@ -230,11 +230,11 @@ html.fc-loading body>:not(#fc-loading):not(script):not(style):not(noscript){visi
           <path d="M263 102C250 128 230 134 210 143L229 147 230 166C254 145 269 126 274 106" fill="#ac3740"/>
           <path d="M270 103C287 121 310 124 326 143L307 142 303 157C282 142 269 124 265 107" fill="#7b242d"/>
           <ellipse cx="269" cy="102" rx="10" ry="7" fill="#bd4a4c"/>
-          <g class="fc-spark" fill="#e6c88c"><path d="M92 143 95 155 107 158 95 161 92 173 89 161 77 158 89 155Z"/></g>
-          <g class="fc-spark" fill="#e6c88c"><path d="M430 90 433 103 446 106 433 109 430 122 427 109 414 106 427 103Z"/></g>
-          <g class="fc-spark" fill="#e6c88c"><path d="M447 425 449 432 456 434 449 436 447 443 445 436 438 434 445 432Z"/></g>
-          <g fill="#e6c88c" opacity=".6"><circle cx="116" cy="440" r="1.8"/><circle cx="456" cy="224" r="1.7"/><circle cx="395" cy="55" r="1.3"/><circle cx="99" cy="254" r="1.2"/></g>
-          <path d="M50 309H80M65 294V324" stroke="#97ad92" stroke-width=".5" opacity=".5"/>
+          <g class="fc-spark" fill="#f5bd3d"><path d="M92 143 95 155 107 158 95 161 92 173 89 161 77 158 89 155Z"/></g>
+          <g class="fc-spark" fill="#f5bd3d"><path d="M430 90 433 103 446 106 433 109 430 122 427 109 414 106 427 103Z"/></g>
+          <g class="fc-spark" fill="#f5bd3d"><path d="M447 425 449 432 456 434 449 436 447 443 445 436 438 434 445 432Z"/></g>
+          <g fill="#f5bd3d" opacity=".6"><circle cx="116" cy="440" r="1.8"/><circle cx="456" cy="224" r="1.7"/><circle cx="395" cy="55" r="1.3"/><circle cx="99" cy="254" r="1.2"/></g>
+          <path d="M50 309H80M65 294V324" stroke="#9da1a5" stroke-width=".5" opacity=".5"/>
         </svg></div>
           <div class="fc-globe-canvas"></div>
           <span class="fc-globe-orbit" aria-hidden="true"></span>

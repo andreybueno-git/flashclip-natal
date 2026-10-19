@@ -115,20 +115,23 @@ function initializeComputers(list) {
         item.src = identity.logo;
       });
     }
+    // Cada versão pode trocar a tela pela própria paleta via variáveis CSS.
+    const styles = getComputedStyle(document.documentElement);
+    const tone = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
     const canvas = document.createElement('canvas'); canvas.width = 640; canvas.height = 400;
     const context = canvas.getContext('2d');
     const gradient = context.createRadialGradient(320, 185, 10, 320, 185, 370);
-    gradient.addColorStop(0, '#183b30'); gradient.addColorStop(1, '#061610');
+    gradient.addColorStop(0, tone('--fc-screen-glow', '#183b30')); gradient.addColorStop(1, tone('--fc-screen-base', '#061610'));
     context.fillStyle = gradient; context.fillRect(0, 0, 640, 400);
-    context.fillStyle = '#aebfb1'; context.textAlign = 'left'; context.font = '500 13px Arial';
+    context.fillStyle = tone('--fc-screen-muted', '#aebfb1'); context.textAlign = 'left'; context.font = '500 13px Arial';
     context.fillText('FLASHCLIP  /  APRENDA NA PRÁTICA', 36, 37);
-    context.strokeStyle = '#d5c08c35'; context.beginPath(); context.moveTo(36, 57); context.lineTo(604, 57); context.stroke();
+    context.strokeStyle = tone('--fc-screen-rule', '#d5c08c35'); context.beginPath(); context.moveTo(36, 57); context.lineTo(604, 57); context.stroke();
     if (image) {
       const scale = Math.min(152 / image.naturalWidth, 152 / image.naturalHeight);
       const w = image.naturalWidth * scale, h = image.naturalHeight * scale;
       context.drawImage(image, 320 - w / 2, 183 - h / 2, w, h);
     }
-    context.textAlign = 'center'; context.fillStyle = '#f3eedf';
+    context.textAlign = 'center'; context.fillStyle = tone('--fc-screen-text', '#f3eedf');
     context.font = `600 ${identity.name.length > 10 ? 36 : 44}px Arial`;
     context.fillText(identity.name, 320, image ? 317 : 220, 560);
     context.fillStyle = identity.color; context.fillRect(300, 351, 40, 3);

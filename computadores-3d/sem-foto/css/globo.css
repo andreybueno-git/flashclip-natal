@@ -1,6 +1,12 @@
 /* Um objeto operável. Conteúdo e controles permanecem em HTML. */
-.fc-hero { min-height: 830px; padding-top: 28px; background: radial-gradient(ellipse at 72% 42%, #164b3d66, transparent 57%); }
-.fc-hero::before { pointer-events: none; background: radial-gradient(ellipse at 71% 72%, #d9ac6816, transparent 36%); }
+/* Cenário da hero feito pelo Pedro: a cabana fica à direita, sob o globo. */
+.fc-hero {
+  min-height: 830px; padding-top: 28px;
+  background-color: #030508;
+  background-image: linear-gradient(90deg, rgba(3, 5, 8, .55) 0%, rgba(3, 5, 8, .12) 46%, rgba(3, 5, 8, 0) 72%), linear-gradient(180deg, rgba(3, 5, 8, 0) 70%, rgba(3, 5, 8, .7) 100%), url("../imagens/Cenario/flashclip-tela-principal.svg");
+  background-repeat: no-repeat; background-position: center, center, center bottom; background-size: cover, cover, cover;
+}
+.fc-hero::before { pointer-events: none; background: radial-gradient(ellipse at 71% 72%, #f5bd3d16, transparent 36%); }
 .fc-hero::after { opacity: .12; }
 .fc-hero-grid { grid-template-columns: .85fr 1.4fr; min-height: 635px; margin-right: -5vw; }
 .fc-hero-copy { padding: 5px 0 32px; }
@@ -10,8 +16,8 @@
 .fc-globe-dock { min-width: 0; position: relative; }
 .fc-globe-experience { position: relative; width: 100%; isolation: isolate; }
 .fc-globe-heading { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 0; }
-.fc-globe-heading > span { font-size: 8px; letter-spacing: .22em; color: #b8c1af; opacity: .7; }
-.fc-globe-heading [data-close-globe] { background: #12352d; border: 1px solid #e6c88c55; color: #f3eedf; padding: 11px 16px; border-radius: 30px; font: inherit; cursor: pointer; }
+.fc-globe-heading > span { font-size: 8px; letter-spacing: .22em; color: #aeb4b8; opacity: .7; }
+.fc-globe-heading [data-close-globe] { background: #11161b; border: 1px solid #f5bd3d55; color: #f2f2f2; padding: 11px 16px; border-radius: 30px; font: inherit; cursor: pointer; }
 .fc-globe-heading [hidden] { display: none; }
 .fc-globe-view { height: 485px; position: relative; width: 100%; outline-offset: -4px; touch-action: pan-y; cursor: grab; -webkit-user-select: none; user-select: none; }
 .fc-globe-view:active { cursor: grabbing; }
@@ -22,22 +28,22 @@
 .fc-globe-view[data-renderer="webgl"] .fc-globe-fallback { display: none; }
 .fc-globe-view[data-renderer="webgl"] .fc-globe-loader { display: none; }
 .fc-globe-view[data-renderer="fallback"] .fc-globe-loader { bottom: 0; }
-.fc-globe-loader { position: absolute; left: 10%; right: 10%; bottom: 35%; z-index: 3; text-align: center; color: #f3eedf; font-size: 12px; }
-.fc-globe-orbit { position: absolute; width: 76%; height: 17%; border: 1px solid #d8c28c25; border-radius: 50%; bottom: 6%; left: 12%; pointer-events: none; transform: rotate(-8deg); }
-.fc-globe-hint { color: #bccab8; text-align: center; font-size: 10px; letter-spacing: .02em; padding: 0 12px; margin: -2px 0 16px; }
+.fc-globe-loader { position: absolute; left: 10%; right: 10%; bottom: 35%; z-index: 3; text-align: center; color: #f2f2f2; font-size: 12px; }
+.fc-globe-orbit { position: absolute; width: 76%; height: 17%; border: 1px solid #f5bd3d25; border-radius: 50%; bottom: 6%; left: 12%; pointer-events: none; transform: rotate(-8deg); }
+.fc-globe-hint { color: #aeb4b8; text-align: center; font-size: 10px; letter-spacing: .02em; padding: 0 12px; margin: -2px 0 16px; }
 .fc-globe-actions { display: flex; justify-content: center; align-items: center; gap: 14px; padding: 0 15px; }
 .fc-globe-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 30px; padding: 14px 22px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s, transform .2s; }
 .fc-globe-actions button:hover:not(:disabled) { transform: translateY(-2px); }
-.fc-shake { background: #e6c88c; color: #071f1b; border: 1px solid #e6c88c; box-shadow: 0 0 35px #e6c88c13; }
+.fc-shake { background: #f5bd3d; color: #030508; border: 1px solid #f5bd3d; box-shadow: 0 0 35px #f5bd3d13; }
 .fc-shake > span { font-size: 20px; line-height: 1; }
-.fc-explore { color: #f3eedf; border: 1px solid #e6c88c44; background: #0a2a2444; }
+.fc-explore { color: #f2f2f2; border: 1px solid #f5bd3d44; background: #0d121744; }
 .fc-globe-actions button:disabled { opacity: .5; cursor: default; }
 .fc-globe-options { display: flex; justify-content: center; gap: 18px; margin: 12px 0 0; }
-.fc-globe-options button { font: 10px inherit; font-family: inherit; font-size: 10px; color: #b8c7b4; background: transparent; border: 0; padding: 7px 0; cursor: pointer; border-bottom: 1px solid #e6c88c22; }
-.fc-globe-options button:hover { color: #e6c88c; }
-.fc-globe-status { text-align: center; font-size: 9px; color: #95ac9f; margin: 9px 0 12px; letter-spacing: .04em; min-height: 17px; }
-.fc-globe-dialog { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; padding: 0; margin: 0; border: 0; color: #f3eedf; background: radial-gradient(ellipse at 50% 45%, #17493c, #061d19 75%); overflow-y: auto; }
-.fc-globe-dialog::backdrop { background: #041610eF; }
+.fc-globe-options button { font: 10px inherit; font-family: inherit; font-size: 10px; color: #aeb4b8; background: transparent; border: 0; padding: 7px 0; cursor: pointer; border-bottom: 1px solid #f5bd3d22; }
+.fc-globe-options button:hover { color: #f5bd3d; }
+.fc-globe-status { text-align: center; font-size: 9px; color: #9da1a5; margin: 9px 0 12px; letter-spacing: .04em; min-height: 17px; }
+.fc-globe-dialog { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; padding: 0; margin: 0; border: 0; color: #f2f2f2; background: radial-gradient(ellipse at 50% 45%, #161d25, #030508 75%); overflow-y: auto; }
+.fc-globe-dialog::backdrop { background: #030508eF; }
 .fc-globe-dialog .fc-globe-experience { max-width: 1400px; min-height: 100%; margin: auto; padding: 0 25px 20px; }
 .fc-globe-dialog .fc-globe-heading { padding-top: 24px; }
 .fc-globe-dialog .fc-globe-view { height: calc(100dvh - 220px); min-height: 330px; }
@@ -56,7 +62,11 @@ body.fc-globe-open { overflow: hidden; }
   .fc-globe-actions button { padding: 12px 15px; font-size: 11px; }
 }
 @media (max-width: 700px) {
-  .fc-hero { padding: 22px 6% 0; }
+  .fc-hero {
+    padding: 22px 6% 0;
+    background-image: linear-gradient(180deg, rgba(3, 5, 8, .1) 0%, rgba(3, 5, 8, .05) 48%, rgba(3, 5, 8, .75) 100%), url("../imagens/Cenario/flashclip-tela-principal.svg");
+    background-position: center, right bottom; background-size: cover, auto 48%;
+  }
   .fc-hero-grid { display: flex; flex-direction: column; margin: 0; min-height: 0; }
   .fc-hero-copy { width: 100%; padding: 32px 0 0; }
   .fc-hero-copy h1 { font-size: clamp(62px, 14.5vw, 88px); margin-bottom: 20px; }
@@ -107,7 +117,7 @@ body.fc-globe-open { overflow: hidden; }
 /* O canvas acompanha o mouse sem uma moldura retangular ao receber foco. */
 .natal-theme .fc-globe-view:focus { outline: none; }
 .natal-theme #fc-title:focus { outline: none; }
-.fc-globe-experience:has(.fc-globe-view:focus-visible) .fc-globe-hint { color: #f3eedf; text-decoration: underline; text-underline-offset: 4px; }
+.fc-globe-experience:has(.fc-globe-view:focus-visible) .fc-globe-hint { color: #f2f2f2; text-decoration: underline; text-underline-offset: 4px; }
 
 /* Controles confortáveis para os dedos, inclusive em paisagem. */
 @media (max-width: 700px), (hover: none) and (pointer: coarse) {

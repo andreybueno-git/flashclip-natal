@@ -49,7 +49,7 @@ async function initGlobe() {
   scene.environmentIntensity = .5;
   envScene.dispose(); pmrem.dispose();
 
-  const ambient = new THREE.HemisphereLight(0xc5e8e4, 0x112e22, .9);
+  const ambient = new THREE.HemisphereLight(0xe2e7ee, 0x0d1217, .9);
   scene.add(ambient);
   const key = new THREE.DirectionalLight(0xffe2ba, 2.2);
   key.position.set(-3,7,5); key.castShadow=true;
@@ -57,7 +57,7 @@ async function initGlobe() {
   Object.assign(key.shadow.camera, {left:-3,right:3,top:6,bottom:-2,near:.1,far:20});
   key.shadow.bias=-.001;
   scene.add(key);
-  const rim = new THREE.DirectionalLight(0x86d4c3, 1.7);
+  const rim = new THREE.DirectionalLight(0xb9c6d6, 1.7);
   rim.position.set(4,4,-3); scene.add(rim);
   const warm = new THREE.PointLight(0xffbd57, 6, 8, 2);
   warm.position.set(-.7,1.8,1); scene.add(warm);
