@@ -2,7 +2,8 @@
 (() => {
   let context, musicBus, musicOutput, effectsBus, master, timer=0, unlocked=false;
   let music=true, effects=true, step=0, nextNote=0, revision=0, effectsRevision=0;
-  let lifecycle=Promise.resolve(), pageInactive=false;
+  let lifecycle=Promise.resolve(), pageInactive=false, startedSilent=false, buttonUnlockTried=false, pendingEffect=null;
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const voices=new Set();
   const musicButtons=[...document.querySelectorAll('[data-audio-music]')];
   const effectsButtons=[...document.querySelectorAll('[data-audio-effects]')];
@@ -31,6 +32,31 @@
     const lowpass=context.createBiquadFilter();lowpass.type='lowpass';lowpass.frequency.value=3500;
     musicBus.connect(delay);delay.connect(lowpass);lowpass.connect(feedback);feedback.connect(delay);
     const wet=context.createGain();wet.gain.value=.14;lowpass.connect(wet);wet.connect(musicOutput);
+    // Um resume tardio (gesto seguinte, volta de interrupção no iOS) também retoma a trilha.
+    context.onstatechange=()=>{
+      document.body.dataset.audio=context.state;
+      if(context.state!=='running'||!unlocked)return;
+      buttonUnlockTried=false;flushEffect();reconcile();
+    };
+  }
+  // Com a chave de silencioso do iPhone, o Web Audio fica mudo; 'playback' segue o volume de mídia.
+  function playbackSession(active){try{if(navigator.audioSession)navigator.audioSession.type=active?'playback':'auto';}catch{}}
+  // Um quadro silencioso tocado dentro do gesto destrava a saída nos iPhones mais antigos.
+  function prime(){
+    const source=context.createBufferSource();source.buffer=context.createBuffer(1,1,context.sampleRate);
+    source.connect(context.destination);source.onended=()=>source.disconnect();source.start(0);
+  }
+  // O webkitAudioContext antigo nem sempre devolve promessa; recusas viram estado, não exceção.
+  function resume(){try{return Promise.resolve(context.resume()).catch(()=>{});}catch{return Promise.resolve();}}
+  // O Safari só libera o som quando o contexto nasce ou é retomado no próprio gesto, sem esperar promessas.
+  function wake(){
+    init();if(!context)return;
+    unlocked=true;
+    if(wantsRunning()){
+      playbackSession(true);
+      if(context.state!=='running'){resume();prime();}
+    }
+    reconcile();
   }
   function track(source,bus,nodes=[]){
     const item={source,bus,cleanup:null};
@@ -75,8 +101,16 @@
     lifecycle=lifecycle.catch(()=>{}).then(async()=>{
       if(current!==revision)return;
       if(wantsRunning()){
-        if(context.state!=='running')await context.resume();
-      }else if(context.state!=='suspended'&&context.state!=='closed')await context.suspend();
+        playbackSession(true);
+        // Fora de um gesto o resume pode ficar pendente (Chrome) ou ser recusado (Safari):
+        // não prenda a fila; onstatechange retoma quando o próximo toque liberar o som.
+        if(context.state!=='running')await Promise.race([resume(),wait(800)]);
+      }else{
+        // Som desligado pelo visitante devolve o áudio de outros apps.
+        if(!music&&!effects)playbackSession(false);
+        // O Safari também pode segurar um suspend; nenhuma promessa do Web Audio trava a fila.
+        if(context.state!=='suspended'&&context.state!=='closed')await Promise.race([Promise.resolve(context.suspend()).catch(()=>{}),wait(800)]);
+      }
       if(current!==revision)return;
       if(wantsRunning()&&music&&context.state==='running'&&!timer){
         nextNote=context.currentTime+.06;timer=setInterval(schedule,100);schedule();
@@ -88,15 +122,35 @@
     });
     return lifecycle;
   }
-  function activate(event){
-    if(!event.isTrusted||unlocked)return;
-    if(!event.target.closest('#globo,[data-entry-tap],[data-audio-music],[data-audio-effects],[data-shake-globe]'))return;
-    init();if(!context)return;unlocked=true;reconcile();
+  function audible(){return unlocked&&context?.state==='running';}
+  // Mouse e teclado ativam no início do gesto; o toque só conta no fim (pointerup, touchend, click).
+  function activating(event){
+    if(event.type==='keydown')return event.key==='Enter'||event.key===' ';
+    if(event.type==='pointerdown')return event.pointerType==='mouse';
+    if(event.type==='pointerup')return event.pointerType!=='mouse';
+    return event.type==='touchend'||event.type==='click';
   }
-  document.addEventListener('pointerdown',activate,{capture:true});
-  document.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')activate(e);},{capture:true});
-  musicButtons.forEach(button=>button.addEventListener('click',()=>{music=!music;label();reconcile();}));
-  effectsButtons.forEach(button=>button.addEventListener('click',()=>{effects=!effects;if(!effects)stopVoices(effectsBus);label();reconcile();}));
+  function gesture(event){
+    if(!event.isTrusted)return;
+    if(event.type==='pointerdown'||event.type==='keydown')startedSilent=!audible();
+    if(!activating(event)||audible())return;
+    // Antes do primeiro som, só o globo e os controles de áudio ligam a trilha. Depois disso,
+    // qualquer toque retoma o que o iOS suspendeu (aba em segundo plano, ligação, Siri).
+    if(!unlocked&&!event.target.closest?.('#globo,.fc-entry,.fc-globe-experience,[data-audio-music],[data-audio-effects]'))return;
+    // Repete a cada gesto até o som sair: um toque recusado não encerra as tentativas.
+    wake();
+  }
+  for(const type of ['pointerdown','pointerup','touchend','click','keydown'])document.addEventListener(type,gesture,{capture:true,passive:true});
+  // Com o som ainda parado, o primeiro toque em "ligada" só libera o áudio, sem desligar a opção.
+  // Se mesmo assim o som não sair, o toque seguinte volta a alternar normalmente.
+  function onlyUnlock(enabled){
+    const silent=startedSilent;startedSilent=false;
+    if(!enabled||!silent||buttonUnlockTried)return false;
+    buttonUnlockTried=true;return true;
+  }
+  // Religar acontece dentro do clique, ainda no gesto, para o Safari aceitar o resume.
+  musicButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(music)){reconcile();return;}music=!music;label();if(music)wake();else reconcile();}));
+  effectsButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(effects)){reconcile();return;}effects=!effects;if(!effects)stopVoices(effectsBus);label();if(effects)wake();else reconcile();}));
   function noise(duration,frequency,volume){
     if(!context)return;
     const buffer=context.createBuffer(1,Math.ceil(context.sampleRate*duration),context.sampleRate),data=buffer.getChannelData(0);
@@ -108,13 +162,17 @@
     source.connect(filter);filter.connect(gain);gain.connect(effectsBus);track(source,effectsBus,[filter,gain]);source.start();source.stop(now+duration);
   }
   function canPlay(){return unlocked&&effects&&context?.state==='running'&&!pageInactive&&!document.hidden;}
+  // O primeiro toque pode chegar antes de o iOS ligar o áudio. Guarde só o efeito mais recente
+  // por um instante e descarte-o se a aba foi ocultada ou o visitante silenciou os efeitos.
+  function flushEffect(){
+    const pending=pendingEffect;pendingEffect=null;
+    if(pending&&pending.revision===effectsRevision&&performance.now()-pending.at<1500&&canPlay())pending.play();
+  }
   function playEffect(play){
     if(!unlocked||!effects||!context||pageInactive||document.hidden)return;
     if(canPlay()){play();return;}
-    // O primeiro Enter pode chegar antes de resume resolver. Preserve esse gesto,
-    // mas descarte o efeito se a aba foi ocultada ou o usuário o silenciou.
-    const current=effectsRevision;
-    reconcile().then(()=>{if(current===effectsRevision&&canPlay())play();});
+    pendingEffect={play,at:performance.now(),revision:effectsRevision};
+    reconcile().then(flushEffect);
   }
   window.addEventListener('fc:entry-hit',e=>{
     playEffect(()=>{
