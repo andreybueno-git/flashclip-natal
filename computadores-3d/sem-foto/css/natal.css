@@ -23,7 +23,7 @@ body.natal-theme {
 .fc-skip { position: fixed; left: 20px; top: -100px; padding: 12px 20px; z-index: 3000; background: var(--fc-paper); color: var(--fc-ink); }
 .fc-skip:focus { top: 15px; }
 .natal-theme main { background: transparent; }
-.natal-theme main::before, .natal-theme main::after { display: none; }
+.natal-theme main:not(.fc-home)::before, .natal-theme main::after { display: none; }
 .natal-theme .navbar {
   position: sticky; top: 0; height: 88px; min-height: 88px;
   padding: 0 5%; gap: 30px; background: var(--fc-ink);
@@ -109,22 +109,22 @@ body.natal-theme {
 .fc-scroll-cue a { color: var(--fc-gold); font-size: 11px; text-decoration: none; }
 
 /* Capítulos com repouso: o gesto apresenta, a leitura fica estável. */
-.natal-theme .fc-home .sobre { padding: 100px 9%; text-align: left; background: var(--fc-paper); color: var(--fc-ink); min-height: auto; }
-.natal-theme .fc-home .sobre::before, .natal-theme .fc-home .sobre::after { display: none; }
+/* Seções em tom escuro sobre o céu estrelado da home (atualização do Pedro). */
+.natal-theme .fc-home .sobre { padding: 100px 9%; text-align: left; color: var(--fc-paper); min-height: auto; }
 .natal-theme .fc-home .sobre-conteudo { max-width: 1150px; display: grid; grid-template-columns: 1.2fr 1fr; column-gap: 80px; align-items: center; margin: auto; }
-.natal-theme .fc-home .sobre-categoria { grid-column: 1 / -1; color: #786140; font-size: 10px; letter-spacing: .16em; margin-bottom: 25px; }
-.natal-theme .fc-home .sobre h2 { font: 400 clamp(40px, 4.3vw, 64px)/1.08 Georgia, serif; letter-spacing: -.045em; margin: 0; color: var(--fc-ink); }
-.natal-theme .fc-home .sobre-descricao { color: #4c6156; font-size: 14px; line-height: 1.95; margin: 0; max-width: 400px; }
-.natal-theme .fc-home .parceiros { padding: 50px 9%; display: grid; grid-template-columns: 1fr 1fr; align-items: center; background: #ede6d5; border-top: 1px solid #102d2520; gap: 30px; text-align: left; }
-.natal-theme .fc-home .parceiros::before, .natal-theme .fc-home .parceiros::after { display: none; }
-.natal-theme .fc-home .parceiros-titulo span { font-size: 9px; letter-spacing: .18em; color: #786140; }
-.natal-theme .fc-home .parceiros h2 { color: #173c31; font: 400 28px Georgia, serif; margin: 8px 0; }
-.natal-theme .fc-home .parceiros p { color: #526256; font-size: 12px; max-width: 340px; }
+.natal-theme .fc-home .sobre-categoria { grid-column: 1 / -1; justify-content: flex-start; color: var(--fc-gold); font-size: 10px; letter-spacing: .16em; margin-bottom: 25px; }
+.natal-theme .fc-home .sobre-categoria::before { display: none; }
+.natal-theme .fc-home .sobre h2 { font: 400 clamp(40px, 4.3vw, 64px)/1.08 Georgia, serif; letter-spacing: -.045em; margin: 0; color: var(--fc-paper); }
+.natal-theme .fc-home .sobre-descricao { color: var(--fc-muted); font-size: 14px; line-height: 1.95; margin: 0; max-width: 400px; }
+.natal-theme .fc-home .parceiros { padding: 50px 9%; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 30px; text-align: left; }
+.natal-theme .fc-home .parceiros-titulo { margin-bottom: 0; }
+.natal-theme .fc-home .parceiros-titulo span { justify-content: flex-start; font-size: 9px; letter-spacing: .18em; color: var(--fc-gold); }
+.natal-theme .fc-home .parceiros h2 { color: var(--fc-paper); font: 400 28px Georgia, serif; margin: 8px 0; }
+.natal-theme .fc-home .parceiros p { color: var(--fc-muted); font-size: 12px; max-width: 340px; }
 .natal-theme .fc-home .lista-parceiros { margin: 0; justify-content: flex-end; }
-.natal-theme .fc-home .parceiro { background: #103d32; padding: 18px 25px; border: 1px solid #173c3126; border-radius: 2px; box-shadow: none; min-width: 150px; }
+.natal-theme .fc-home .parceiro { background: #103d32; padding: 18px 25px; border: 1px solid var(--fc-line); border-radius: 2px; box-shadow: none; min-width: 150px; }
 .natal-theme .fc-home .parceiro img { max-width: 145px; max-height: 55px; }
-.natal-theme .motivos { background: #0e3027; padding: 95px 7%; border: 0; }
-.natal-theme .motivos::before, .natal-theme .motivos::after { display: none; }
+.natal-theme .motivos { padding: 95px 7%; }
 .natal-theme .titulo-motivos, .natal-theme .titulo-cursos { text-align: left; max-width: none; margin: 0 0 45px; }
 .natal-theme .titulo-motivos > span, .natal-theme .titulo-cursos span { color: var(--fc-gold); font-size: 9px; letter-spacing: .18em; }
 .natal-theme .titulo-motivos h2, .natal-theme .titulo-cursos h2 { font: 400 clamp(35px, 4vw, 53px)/1.15 Georgia, serif; letter-spacing: -.04em; color: var(--fc-paper); }
@@ -185,6 +185,33 @@ body.natal-theme {
 .natal-theme .cta h2 { font-family: Georgia, serif; color: var(--fc-paper); }
 .natal-theme .cta > span { color: var(--fc-gold); }
 .natal-theme .cabecalho { background: #10382d; border-color: var(--fc-line); }
+/* Home atualizada pelo Pedro: céu estrelado e ilustrações natalinas,
+   mantendo o verde-escuro da campanha no lugar do preto da base. */
+.natal-theme main.fc-home { background-color: var(--fc-ink); }
+.natal-theme main.fc-home::before {
+  background-image:
+    url("../imagens/Decoracoes/ceu-estrelado-natal.svg"),
+    radial-gradient(ellipse at 12% 18%, #2d604233, transparent 34%),
+    radial-gradient(ellipse at 87% 45%, #e6c88c12, transparent 30%);
+}
+.natal-theme .fc-home :is(.sobre, .parceiros, .motivos, .cursos) { border-top: 1px solid var(--fc-line); }
+.natal-theme .fc-home .sobre { background-image: radial-gradient(ellipse at 17% 52%, #2d604230, transparent 36%) !important; }
+.natal-theme .fc-home .parceiros { background-image: radial-gradient(ellipse at 80% 45%, #e6c88c14, transparent 32%) !important; }
+.natal-theme .fc-home .motivos { background-image: radial-gradient(ellipse at 12% 55%, #2d604226, transparent 30%), radial-gradient(ellipse at 88% 18%, #e6c88c0d, transparent 28%) !important; }
+.natal-theme .fc-home .cursos { background-image: radial-gradient(ellipse at 50% 5%, #e6c88c12, transparent 40%) !important; }
+/* As ilustrações aparecem só com espaço lateral, como no original. */
+.natal-theme .fc-home .sobre::before { left: max(22px, calc((100% - 1500px) / 2)); }
+@media (min-width: 1121px) {
+  .natal-theme .fc-home .sobre-conteudo { padding-left: clamp(0px, 9vw, 150px); }
+  .natal-theme .fc-home .parceiros-titulo { padding-left: clamp(0px, 15vw, 230px); }
+}
+.natal-theme .fc-home .motivos::before { left: auto; }
+/* Rótulos e títulos alinhados à esquerda: traço dourado só à direita. */
+.natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos, .titulo-cursos) > span { display: inline-flex; justify-content: flex-start; }
+.natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos) > span::before { display: none; }
+.natal-theme .fc-home :is(.sobre h2, .parceiros-titulo h2, .titulo-motivos h2, .titulo-cursos h2)::after { margin-left: 0; background: linear-gradient(90deg, var(--fc-gold), #e6c88c26); box-shadow: 0 0 18px #e6c88c26; }
+.natal-theme .fc-home .titulo-cursos::before { content: none; }
+.natal-theme .fc-home :is(.parceiros-titulo, .titulo-motivos, .titulo-cursos) > p { color: var(--fc-muted); }
 .fc-motion-ready .fc-reveal { opacity: 0; translate: 0 18px; transition: opacity .65s, translate .65s; }
 .fc-motion-ready .fc-reveal.fc-visible { opacity: 1; translate: 0 0; }
 .fc-paused *, .fc-hidden * { animation-play-state: paused !important; }
