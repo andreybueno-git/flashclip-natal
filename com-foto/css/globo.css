@@ -119,3 +119,56 @@ body.fc-globe-open { overflow: hidden; }
 /* O canvas acompanha o mouse sem uma moldura retangular ao receber foco. */
 .natal-theme .fc-globe-view:focus { outline: none; }
 .fc-globe-experience:has(.fc-globe-view:focus-visible) .fc-globe-hint { color: #f3eedf; text-decoration: underline; text-underline-offset: 4px; }
+
+/* Controles confortáveis para os dedos, inclusive em paisagem. */
+@media (max-width: 700px), (hover: none) and (pointer: coarse) {
+  .fc-globe-options { flex-wrap: wrap; gap: 4px 8px; padding-inline: 12px; }
+  .fc-globe-options button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+}
+
+@media (max-height: 440px) and (orientation: landscape) {
+  .fc-globe-dialog .fc-globe-experience {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, .7fr);
+    grid-template-rows: 44px minmax(0, 1fr) auto auto;
+    gap: 4px 16px;
+    height: 100dvh;
+    min-height: 0;
+    padding: 12px;
+  }
+  .fc-globe-dialog .fc-globe-heading { grid-column: 1 / -1; grid-row: 1; padding: 0; }
+  .fc-globe-dialog .fc-globe-view {
+    grid-column: 1;
+    grid-row: 2 / 5;
+    height: 100%;
+    min-height: 0;
+  }
+  .fc-globe-dialog .fc-globe-hint {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .fc-globe-dialog .fc-globe-actions { display: none; }
+  .fc-globe-dialog .fc-globe-options {
+    grid-column: 2;
+    grid-row: 3;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 4px 8px;
+    margin: 0;
+    padding: 0;
+  }
+  .fc-globe-dialog .fc-globe-options button { min-height: 44px; }
+  .fc-globe-dialog .fc-globe-status { grid-column: 2; grid-row: 4; min-height: 0; margin: 0; text-align: left; line-height: 1.4; }
+}

@@ -209,3 +209,16 @@ html:has(body.fc-entry-active) { scrollbar-gutter: stable; }
 .fc-audio-dock button { background: none; border: 0; color: #c7d1bf; font: 10px 'Avenir Next', Arial, sans-serif; cursor: pointer; padding: 5px 0; }
 body.fc-entry-active .fc-audio-dock { display: none; }
 @media(max-width:700px) { .fc-entry-utility { max-width: 300px; } .fc-audio-dock { right: 10px; bottom: 8px; } }
+
+@media (max-width: 700px), (hover: none) and (pointer: coarse) {
+  .fc-audio-dock { max-width: calc(100vw - 20px); flex-wrap: wrap; gap: 0 4px; padding: 2px 6px; }
+  .fc-audio-dock button,
+  .fc-entry-utility > button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .fc-entry-utility { flex-wrap: wrap; gap: 2px 6px; }
+}

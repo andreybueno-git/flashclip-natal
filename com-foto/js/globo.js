@@ -218,9 +218,9 @@ async function initGlobe() {
   const shakeGesture = new ShakeGesture();
   const hoverGesture = new ShakeGesture({distance:35});
   view.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hoverGesture.begin(e.clientX,performance.now());});
-  view.addEventListener('pointerleave',()=>{
+  view.addEventListener('pointerleave',e=>{
     hoverGesture.end();
-    if(!drag&&!opening.active&&!opening.playing&&!paused&&!reduced.matches){targetYaw=homeYaw;targetPitch=0;schedule();}
+    if(e.pointerType==='mouse'&&!drag&&!opening.active&&!opening.playing&&!paused&&!reduced.matches){targetYaw=homeYaw;targetPitch=0;schedule();}
   });
   view.addEventListener('pointerdown',e=>{
     if(e.button!==0||paused||opening.playing) return;
