@@ -2,7 +2,7 @@
 (() => {
   let context, musicBus, musicOutput, effectsBus, master, timer=0, unlocked=false;
   let music=true, effects=true, step=0, nextNote=0, revision=0, effectsRevision=0;
-  let lifecycle=Promise.resolve(), pageInactive=false, startedSilent=false, pressStarted=false, buttonUnlockTried=false, pendingEffect=null;
+  let lifecycle=Promise.resolve(), pageInactive=false, startedSilent=false, pressStarted=false, pressTarget=null, buttonUnlockTried=false, pendingEffect=null;
   const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const voices=new Set();
   const musicButtons=[...document.querySelectorAll('[data-audio-music]')];
@@ -133,9 +133,10 @@
   }
   function gesture(event){
     if(!event.isTrusted)return;
-    if(event.type==='pointerdown'||event.type==='keydown'){startedSilent=!audible();pressStarted=true;}
+    const control=event.target.closest?.('button')||event.target;
+    if(event.type==='pointerdown'||event.type==='keydown'){startedSilent=!audible();pressStarted=true;pressTarget=control;}
     // Leitores de tela disparam só o clique, sem toque nem tecla antes.
-    else if(event.type==='click'){if(!pressStarted)startedSilent=!audible();pressStarted=false;}
+    else if(event.type==='click'){if(!pressStarted||control!==pressTarget)startedSilent=!audible();pressStarted=false;}
     if(!activating(event)||audible())return;
     // Antes do primeiro som, só o globo e os controles de áudio ligam a trilha. Depois disso,
     // qualquer toque retoma o que o iOS suspendeu (aba em segundo plano, ligação, Siri).
@@ -149,7 +150,9 @@
   function onlyUnlock(enabled){
     const silent=startedSilent;startedSilent=false;
     if(!enabled||!silent||buttonUnlockTried)return false;
-    buttonUnlockTried=true;return true;
+    // Se o som já saiu durante este mesmo toque, não há período de silêncio a marcar.
+    if(!audible())buttonUnlockTried=true;
+    return true;
   }
   // Religar acontece dentro do clique, ainda no gesto, para o Safari aceitar o resume.
   musicButtons.forEach(button=>button.addEventListener('click',()=>{if(onlyUnlock(music)){reconcile();return;}music=!music;label();if(music)wake();else reconcile();}));
@@ -167,9 +170,11 @@
   function canPlay(){return unlocked&&effects&&context?.state==='running'&&!pageInactive&&!document.hidden;}
   // O primeiro toque pode chegar antes de o iOS ligar o áudio. Guarde só o efeito mais recente
   // por um instante e descarte-o se a aba foi ocultada ou o visitante silenciou os efeitos.
+  // Fica guardado até tocar ou expirar: a fila pode andar antes de o iOS ligar o som.
   function flushEffect(){
-    const pending=pendingEffect;pendingEffect=null;
-    if(pending&&pending.revision===effectsRevision&&performance.now()-pending.at<1500&&canPlay())pending.play();
+    const pending=pendingEffect;if(!pending)return;
+    if(pending.revision!==effectsRevision||performance.now()-pending.at>=1500){pendingEffect=null;return;}
+    if(canPlay()){pendingEffect=null;pending.play();}
   }
   function playEffect(play){
     if(!unlocked||!effects||!context||pageInactive||document.hidden)return;
