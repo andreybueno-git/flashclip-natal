@@ -146,46 +146,63 @@ async function initGlobe() {
   }
   // Foto do globo na pose inicial, guardada na sessão: ao voltar para a home, o index.html a mostra
   // enquanto a cena 3D monta de novo. Tirada uma vez por tamanho, quando o globo está na home.
-  const photoKey='flashclip-globo-foto-v1', photoSizeKey='flashclip-globo-foto-tamanho-v1', photoWindowKey='flashclip-globo-foto-janela-v1';
-  let photoTimer=0;
-  function photoSize() { return `${Math.round(lastWidth)}x${Math.round(lastHeight)}`; }
+  const photoKey='flashclip-globo-foto-v1', photoSizeKey='flashclip-globo-foto-tamanho-v1';
+  let photoTimer=0, photoBusy=false, photoBroken=false;
+  // Mede sem redimensionar o canvas: o setSize apagaria o quadro atual.
+  function viewSize() { const {width,height}=view.getBoundingClientRect(); return `${Math.round(width)}x${Math.round(height)}`; }
   function canPhoto() {
-    return live&&!disposed&&currentLight&&root.parentElement===dock&&!dialog.open&&!opening.active&&!opening.playing
+    return live&&!disposed&&!photoBroken&&root.parentElement===dock&&!dialog.open&&!opening.active&&!opening.playing
       &&!document.body.classList.contains('fc-entry-active')&&!document.body.classList.contains('fc-entry-landing');
   }
-  function hasPhoto() {
-    try {return sessionStorage.getItem(photoSizeKey)===photoSize()&&!!sessionStorage.getItem(photoKey);} catch {return true;}
+  // Tamanho da foto guardada, '' sem tamanho, null sem foto.
+  function storedPhoto() {
+    try {return sessionStorage.getItem(photoKey)?sessionStorage.getItem(photoSizeKey)||'':null;} catch {return '';}
   }
-  function storePhoto(url,size,screen) {
+  function storePhoto(url,size) {
     if(typeof url!=='string'||!url.startsWith('data:image/'))return;
-    try {sessionStorage.setItem(photoKey,url);sessionStorage.setItem(photoSizeKey,size);sessionStorage.setItem(photoWindowKey,screen);}
-    catch {try {[photoKey,photoSizeKey,photoWindowKey].forEach(key=>sessionStorage.removeItem(key));} catch {}}
+    try {sessionStorage.setItem(photoKey,url);sessionStorage.setItem(photoSizeKey,size);}
+    catch {photoBroken=true;try {sessionStorage.removeItem(photoKey);sessionStorage.removeItem(photoSizeKey);} catch {}}
   }
-  function takePhoto(now=false) {
-    clearTimeout(photoTimer);photoTimer=0;
-    if(!canPhoto())return;
-    syncRendererSize();
-    if(!lastWidth||!lastHeight||hasPhoto())return;
-    // O tamanho vale o da hora da foto: a tela pode girar enquanto a imagem é codificada.
-    // 720 px bastam para os segundos em que ela aparece e deixam o PNG do Safari leve.
-    const size=photoSize(), screen=`${innerWidth}x${innerHeight}`;
-    const source=renderer.domElement, scale=Math.min(1,720/Math.max(source.width,source.height));
-    const shot=document.createElement('canvas');
+  function copyCanvas(source,max) {
+    const scale=Math.min(1,max/Math.max(source.width,source.height)), shot=document.createElement('canvas');
     shot.width=Math.max(1,Math.round(source.width*scale));shot.height=Math.max(1,Math.round(source.height*scale));
-    const rotation=pivot.rotation.clone(), x=pivot.position.x, eye=camera.position.clone();
+    shot.getContext('2d').drawImage(source,0,0,shot.width,shot.height);
+    return shot;
+  }
+  function takePhoto(leaving=false) {
+    clearTimeout(photoTimer);photoTimer=0;
+    if(!canPhoto()||(photoBusy&&!leaving))return;
+    // O tamanho vale o da hora da foto: a tela pode girar enquanto a imagem é codificada.
+    const size=viewSize(), stored=storedPhoto();
+    // Ao sair, só se não houver foto nenhuma: a de outro tamanho serve, e a troca de página espera por isso.
+    if(stored===size||(leaving&&stored!==null))return;
+    syncRendererSize();
+    if(!lastWidth||!lastHeight)return;
+    const source=renderer.domElement, rotation=pivot.rotation.clone(), x=pivot.position.x, eye=camera.position.clone();
+    // Como a página abre: globo de frente e luzes acesas.
     pivot.rotation.set(0,homeYaw,0);pivot.position.x=0;
     camera.position.set(0,3.05,Math.max(8.4,fitDistance()));camera.lookAt(0,1.9,0);
+    if(!currentLight)lightScene(true);
     renderer.shadowMap.needsUpdate=true;renderer.render(scene,camera);
-    shot.getContext('2d').drawImage(source,0,0,shot.width,shot.height);
-    // Ao sair da página não há tempo para a versão assíncrona, nem tela para restaurar.
-    if(now){storePhoto(shot.toDataURL('image/webp',.82),size,screen);return;}
+    if(leaving){
+      // Pequena e em PNG, que codifica mais rápido. O '~' faz a próxima visita trocá-la por uma melhor.
+      storePhoto(copyCanvas(source,480).toDataURL('image/png'),`${size}~`);
+      shadowYaw=NaN;return;
+    }
+    const shot=copyCanvas(source,Infinity);
     // Volta ao quadro atual na mesma tarefa: a pose da foto nunca chega à tela.
     pivot.rotation.copy(rotation);pivot.position.x=x;camera.position.copy(eye);camera.lookAt(0,1.9,0);
+    if(!currentLight)lightScene(false);
     renderer.shadowMap.needsUpdate=true;renderer.render(scene,camera);
-    shot.toBlob(blob=>{
-      if(!blob)return;
-      const reader=new FileReader();reader.onload=()=>storePhoto(reader.result,size,screen);reader.readAsDataURL(blob);
-    },'image/webp',.82);
+    photoBusy=true;
+    const save=blob=>{
+      if(!blob){photoBusy=false;return;}
+      const reader=new FileReader();
+      reader.onload=()=>{photoBusy=false;storePhoto(reader.result,size);};reader.onerror=()=>{photoBusy=false;};
+      reader.readAsDataURL(blob);
+    };
+    // Sem WebP (Safari), um PNG de até 720 px, para não pesar na sessão.
+    shot.toBlob(blob=>{if(blob&&blob.type!=='image/webp')copyCanvas(shot,720).toBlob(save,'image/png');else save(blob);},'image/webp',.82);
   }
   function photoSoon() {
     if(!live||photoTimer)return;
@@ -210,17 +227,21 @@ async function initGlobe() {
     camera.fov=width/height<.85 ? 39 : 34;
     camera.updateProjectionMatrix();
   }
+  function lightScene(on) {
+    warm.intensity=on?6:0;
+    emissive.forEach((original,material)=>{
+      material.emissiveIntensity=on?original.intensity:0;
+      material.color.copy(original.color).multiplyScalar(on?1:.16);
+    });
+    glass.material.uniforms.lightOn.value=on?1:0;
+  }
   function applyLight() {
     currentLight=document.body.dataset.lights!=='off';
-    warm.intensity=currentLight?6:0;
-    emissive.forEach((original,material)=>{
-      material.emissiveIntensity=currentLight?original.intensity:0;
-      material.color.copy(original.color).multiplyScalar(currentLight?1:.16);
-    });
-    glass.material.uniforms.lightOn.value=currentLight?1:0;
+    lightScene(currentLight);
     schedule();
   }
   function shake(fromGesture=false) {
+    if(!live)return; // a foto ainda está no lugar do globo
     if(paused) { report('O movimento está pausado. Use “Retomar movimento” para fazer nevar.'); return; }
     if(reduced.matches) {
       snow.scatter(); snowGeo.attributes.position.needsUpdate=true;
@@ -274,7 +295,8 @@ async function initGlobe() {
     if(needsMore) schedule(); else previous=0;
   }
   const ro=new ResizeObserver(()=>{resize();photoSoon();});ro.observe(view);
-  const io=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){previous=0;schedule();}else{cancelAnimationFrame(frame);frame=0;previous=0;}},{threshold:0});io.observe(view);
+  // A última entrada vale: mover o globo (abertura, pouso) gera uma saída e uma volta no mesmo lote.
+  const io=new IntersectionObserver(entries=>{visible=entries[entries.length-1].isIntersecting;if(visible){previous=0;schedule();}else{cancelAnimationFrame(frame);frame=0;previous=0;}},{threshold:0});io.observe(view);
   const mo=new MutationObserver(()=>{
     const nextPaused=document.body.classList.contains('fc-paused');
     if(nextPaused!==paused){paused=nextPaused;drag=null;previous=0;report(paused?'Movimento pausado.':'Movimento retomado.');}
@@ -359,7 +381,8 @@ async function initGlobe() {
   window.addEventListener('fc:load-bypass',()=>{disposed=true;cancelAnimationFrame(frame);frame=0;renderer.dispose();renderer.domElement.remove();});
   window.addEventListener('pagehide',()=>{takePhoto(true);cancelAnimationFrame(frame);frame=0;previous=0;});
   window.addEventListener('pageshow',()=>{previous=0;schedule();});
-  await opening.ready;
+  // O trenó só entra na abertura: se ele demorar, o globo fica pronto sem esperar mais.
+  await Promise.race([opening.ready,new Promise(resolve=>setTimeout(resolve,15000))]);
   if(cancelled())return;
   syncRendererSize();
   if(!lastWidth||!lastHeight)throw new Error('O espaço da prévia ainda não está disponível.');
